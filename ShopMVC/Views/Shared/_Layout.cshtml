@@ -1,0 +1,554 @@
+﻿<!doctype html>
+<html class="no-js" lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>@ViewData["Title"] - PhoneShop</title>
+    <meta name="description" content="Cửa hàng điện thoại chính hãng">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/imgs/furniture/favicon.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/assets/css/meanmenu.min.css">
+    <link rel="stylesheet" href="~/assets/css/animate.css">
+    <link rel="stylesheet" href="~/assets/css/swiper.min.css">
+    <link rel="stylesheet" href="~/assets/css/slick.css">
+    <link rel="stylesheet" href="~/assets/css/magnific-popup.css">
+    <link rel="stylesheet" href="~/assets/css/fontawesome-pro.css">
+    <link rel="stylesheet" href="~/assets/css/spacing.css">
+    <link rel="stylesheet" href="~/assets/css/main.css">
+
+    <link rel="stylesheet" href="~/css/custom-fix.css">
+
+    <style>
+        :root {
+            --tech-primary: #0071e3; /* Xanh Apple */
+            --tech-dark: #1d1d1f; /* Đen */
+            --tech-hover: #0077ed;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: #333;
+        }
+
+        /* --- HEADER TOP (Đăng nhập/Đăng ký) --- */
+        .header-top-area {
+            background-color: #f5f5f7 !important;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 10px 0; /* Tăng chiều cao */
+        }
+
+        /* Nhóm nút Auth */
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        /* Nút Đăng nhập */
+        .btn-auth-login {
+            background-color: white;
+            color: var(--tech-primary);
+            border: 1px solid #d2d2d7;
+            padding: 6px 16px;
+            border-radius: 20px; /* Bo tròn */
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+            .btn-auth-login:hover {
+                background-color: #e8e8ed;
+                border-color: #b0b0b5;
+                color: var(--tech-dark);
+            }
+
+        /* Nút Đăng ký (Nổi bật) */
+        .btn-auth-register {
+            background-color: var(--tech-primary);
+            color: white !important;
+            border: 1px solid var(--tech-primary);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,113,227,0.3);
+        }
+
+            .btn-auth-register:hover {
+                background-color: var(--tech-hover);
+                transform: translateY(-1px);
+            }
+
+        /* Dropdown User (Khi đã đăng nhập) */
+        .user-dropdown-toggle {
+            color: var(--tech-dark);
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 15px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        /* --- MAIN MENU --- */
+        .main-menu ul li a {
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--tech-dark);
+            text-transform: none;
+        }
+
+        .main-menu ul li:hover > a {
+            color: var(--tech-primary);
+        }
+
+        /* --- FOOTER --- */
+        .footer-bg {
+            background-color: #1d1d1f;
+            color: #a1a1a6;
+        }
+
+        .footer-widget-title h4 {
+            color: #fff;
+        }
+
+        .footer-link ul li a:hover {
+            color: #fff;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--tech-dark);
+            text-transform: uppercase;
+        }
+
+            .logo-text span {
+                color: var(--tech-primary);
+            }
+
+        /* Footer – tone công nghệ, tối giản */
+        .site-footer {
+            --c-bg: var(--tech-dark, #0e0e11);
+            --c-fg: var(--tech-gray, #f5f5f7);
+            --c-dim: #a1a1a6;
+            --c-accent: var(--tech-primary, #0071e3);
+            background: var(--c-bg);
+            color: var(--c-fg);
+            padding: 48px 0 24px;
+            font-size: 14px;
+        }
+
+            .site-footer .footer-title {
+                color: #fff;
+                font-weight: 700;
+                letter-spacing: .2px;
+                margin-bottom: 14px;
+                font-size: 14px;
+                text-transform: uppercase;
+            }
+
+            .site-footer .footer-logo {
+                height: 36px;
+                filter: drop-shadow(0 2px 6px rgba(255,255,255,.05));
+            }
+
+            .site-footer p {
+                color: var(--c-dim);
+                margin-bottom: 10px;
+            }
+
+            .site-footer .footer-social a {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 36px;
+                height: 36px;
+                margin-right: 8px;
+                border: 1px solid rgba(255,255,255,.12);
+                border-radius: 50%;
+                color: var(--c-fg);
+                transition: .2s;
+            }
+
+                .site-footer .footer-social a:hover {
+                    background: var(--c-accent);
+                    color: #fff;
+                    border-color: var(--c-accent);
+                }
+
+            .site-footer .footer-links {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+                .site-footer .footer-links li {
+                    margin: 8px 0;
+                }
+
+                .site-footer .footer-links a {
+                    color: var(--c-dim);
+                    text-decoration: none;
+                    transition: .2s;
+                }
+
+                    .site-footer .footer-links a:hover {
+                        color: #fff;
+                    }
+
+            .site-footer .footer-contact {
+                list-style: none;
+                padding: 0;
+                margin: 0 0 10px;
+            }
+
+                .site-footer .footer-contact li {
+                    margin: 6px 0;
+                    color: var(--c-fg);
+                }
+
+                .site-footer .footer-contact i {
+                    width: 18px;
+                    margin-right: 8px;
+                    color: var(--c-accent);
+                }
+
+            .site-footer .footer-newsletter {
+                display: flex;
+                gap: 8px;
+                margin-top: 8px;
+            }
+
+                .site-footer .footer-newsletter input {
+                    flex: 1;
+                    background: #111217;
+                    border: 1px solid rgba(255,255,255,.08);
+                    color: var(--c-fg);
+                    border-radius: 10px;
+                    padding: 10px 12px;
+                }
+
+                    .site-footer .footer-newsletter input::placeholder {
+                        color: #7e7e86;
+                    }
+
+                .site-footer .footer-newsletter button {
+                    width: 46px;
+                    border-radius: 10px;
+                    border: 1px solid var(--c-accent);
+                    background: var(--c-accent);
+                    color: #fff;
+                    transition: .2s;
+                }
+
+                    .site-footer .footer-newsletter button:hover {
+                        filter: brightness(1.07);
+                    }
+
+            .site-footer .footer-payments {
+                margin-top: 10px;
+                color: #c7c7cb;
+                font-size: 24px;
+            }
+
+                .site-footer .footer-payments i {
+                    margin-right: 8px;
+                }
+
+            .site-footer .footer-divider {
+                border: 0;
+                height: 1px;
+                background: rgba(255,255,255,.08);
+                margin: 24px 0;
+            }
+
+            .site-footer .footer-bottom {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                color: var(--c-dim);
+            }
+
+            .site-footer .footer-mini-links a {
+                color: var(--c-dim);
+                margin-left: 14px;
+                text-decoration: none;
+            }
+
+                .site-footer .footer-mini-links a:hover {
+                    color: #fff;
+                }
+
+        /* Mobile */
+        @@media (max-width: 767.98px) {
+            .site-footer
+
+        {
+            padding: 36px 0 18px;
+        }
+
+        .site-footer .footer-bottom {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        }</style>
+</head>
+
+<body>
+
+    <div id="preloader">
+        <div class="bd-loader-inner">
+            <div class="bd-loader">
+                <span class="bd-loader-item"></span><span class="bd-loader-item"></span><span class="bd-loader-item"></span><span class="bd-loader-item"></span><span class="bd-loader-item"></span><span class="bd-loader-item"></span><span class="bd-loader-item"></span><span class="bd-loader-item"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="backtotop-wrap cursor-pointer">
+        <svg class="backtotop-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+        </svg>
+    </div>
+
+    <div class="fix">
+        <div class="offcanvas__info">
+            <div class="offcanvas__wrapper">
+                <div class="offcanvas__content">
+                    <div class="offcanvas__top mb-40 d-flex justify-content-between align-items-center">
+                        <div class="offcanvas__logo">
+                            <a asp-controller="Home" asp-action="Index">
+                                <h3 class="logo-text">Phone<span>Shop</span></h3>
+                            </a>
+                        </div>
+                        <div class="offcanvas__close">
+                            <button><i class="fal fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="mobile-menu fix mb-40"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="offcanvas__overlay"></div>
+    <div class="offcanvas__overlay-white"></div>
+
+    <header>
+        <div class="header">
+            <div class="header-top-area">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 d-none d-md-block">
+                            <div class="link-text">
+                                <span class="me-3"><i class="fa-solid fa-phone me-1"></i> 1900 1234</span>
+                                <span><i class="fa-solid fa-envelope me-1"></i> support@phoneshop.vn</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center justify-content-end">
+                                @using ShopMVC.Helpers
+                                @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+                                @if (HttpContextAccessor.HttpContext.Session.IsLoggedIn())
+                                {
+                                    <div class="dropdown">
+                                        <a class="dropdown-toggle user-dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fa-regular fa-circle-user fa-lg"></i>
+                                            <span>@HttpContextAccessor.HttpContext.Session.GetString("FullName")</span>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                            <li><a style="font-size: 18px" class="dropdown-item" asp-controller="Account" asp-action="Profile"><i class="fa-regular fa-id-card me-2"></i>Tài khoản</a></li>
+                                                <li><a style="font-size: 18px" class="dropdown-item" asp-controller="Order" asp-action="Index"><i class="fa-regular fa-box-open me-2"></i>Đơn hàng</a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                                <li>
+                                                    <form method="post" asp-controller="Account" asp-action="Logout" style="margin: 0;">
+                                                        <button style="font-size: 18px" type="submit" class="dropdown-item" style="border: none; background: none; width: 100%; text-align: left; cursor: pointer; padding: 0.25rem 1rem;">
+                                                            <i class="fas fa-sign-out-alt" ></i> Đăng xuất
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                        </ul>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="auth-buttons">
+                                        <a class="btn-auth-login" asp-controller="Account" asp-action="Login">
+                                            <i class="fa-regular fa-user me-1"></i> Đăng nhập
+                                        </a>
+                                        <a class="btn-auth-register" asp-controller="Account" asp-action="Register">
+                                            Đăng ký ngay
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="header-layout-4 header-bottom" style="background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                <div id="header-sticky" class="header-4">
+                    <div class="mega-menu-wrapper">
+                        <div class="header-main-4">
+                            <div class="header-left">
+                                <div class="header-logo">
+                                    <a asp-controller="Home" asp-action="Index" style="text-decoration:none">
+                                        <h3 class="logo-text m-0">Phone<span>Shop</span></h3>
+                                    </a>
+                                </div>
+                                <div class="mean__menu-wrapper furniture__menu d-none d-lg-block">
+                                    <div class="main-menu">
+                                        <nav id="mobile-menu">
+                                            <ul>
+                                                <li><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                                                <li><a asp-controller="Product" asp-action="Index">Điện thoại</a></li>
+                                                <li><a asp-controller="Product" asp-action="Index">Phụ kiện</a></li>
+                                                <li><a asp-controller="Home" asp-action="About">Giới thiệu</a></li>
+                                                <li><a asp-controller="Home" asp-action="Contact">Liên hệ</a></li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="header-right d-inline-flex align-items-center justify-content-end">
+                                <div class="header-search d-none d-xxl-block">
+                                    <form action="#">
+                                        <input type="text" placeholder="Tìm kiếm sản phẩm...">
+                                        <button type="submit"><i class="fa-regular fa-magnifying-glass"></i></button>
+                                    </form>
+                                </div>
+                                <div class="header-action d-flex align-items-center ml-30">
+                                    <div class="header-action-item">
+                                        <a asp-controller="Cart" asp-action="Index" class="header-action-btn cartmini-open-btn">
+                                            <i class="fa-regular fa-cart-shopping"></i>
+                                            <span class="header-action-badge cart-count">
+                                                @(HttpContextAccessor.HttpContext.Session.GetInt32("CartCount") ?? 0)
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="header-humbager ml-30">
+                                    <a class="sidebar__toggle" href="javascript:void(0)">
+                                        <div class="bar-icon-2">
+                                            <span></span><span></span><span></span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main>
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Brand + social -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand">
+                        <img src="~/images/logo.png" alt="ShopMVC" class="footer-logo" />
+                        <p class="mt-3">
+                            Cửa hàng điện thoại & phụ kiện chính hãng. Giá tốt, giao nhanh, bảo hành chu đáo.
+                        </p>
+                        <div class="footer-social">
+                            <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                            <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                            <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                            <a href="#" aria-label="Tiktok"><i class="fa-brands fa-tiktok"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick links -->
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="footer-title">Liên kết</h6>
+                    <ul class="footer-links">
+                        <li><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                        <li><a asp-controller="Product" asp-action="Index">Sản phẩm</a></li>
+                        <li><a asp-controller="Cart" asp-action="Index">Giỏ hàng</a></li>
+                        <li><a asp-controller="Account" asp-action="Login">Đăng nhập</a></li>
+                        <li><a href="#">Chính sách bảo hành</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support -->
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="footer-title">Hỗ trợ</h6>
+                    <ul class="footer-links">
+                        <li><a href="#">Hướng dẫn mua hàng</a></li>
+                        <li><a href="#">Giao hàng & thanh toán</a></li>
+                        <li><a href="#">Đổi trả 30 ngày</a></li>
+                        <li><a href="#">Bảo mật thông tin</a></li>
+                        <li><a href="#">Liên hệ</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact + newsletter -->
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="footer-title">Liên hệ</h6>
+                    <ul class="footer-contact">
+                        <li><i class="fa-regular fa-location-dot"></i> 123 Lê Lợi, Q.1, TP.HCM</li>
+                        <li><i class="fa-regular fa-phone"></i> 0901 234 567</li>
+                        <li><i class="fa-regular fa-envelope"></i> support@shopmvc.vn</li>
+                    </ul>
+                    <form class="footer-newsletter" method="post" action="#">
+                        <label for="newsletter" class="visually-hidden">Đăng ký nhận tin</label>
+                        <input id="newsletter" name="email" type="email" placeholder="Nhập email của bạn" required />
+                        <button type="submit"><i class="fa-regular fa-paper-plane"></i></button>
+                    </form>
+                    <div class="footer-payments" aria-label="Hỗ trợ thanh toán">
+                        <i class="fa-brands fa-cc-visa"></i>
+                        <i class="fa-brands fa-cc-mastercard"></i>
+                        <i class="fa-brands fa-cc-jcb"></i>
+                        <i class="fa-brands fa-cc-apple-pay"></i>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="footer-divider" />
+
+            <div class="footer-bottom">
+                <span>© @DateTime.Now.Year ShopMVC. All rights reserved.</span>
+                <div class="footer-mini-links">
+                    <a href="#">Điều khoản</a>
+                    <a href="#">Quyền riêng tư</a>
+                    <a href="#">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="~/assets/js/jquery-3.6.0.min.js"></script>
+    <script src="~/assets/js/waypoints.min.js"></script>
+    <script src="~/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/meanmenu.min.js"></script>
+    <script src="~/assets/js/swiper.min.js"></script>
+    <script src="~/assets/js/slick.min.js"></script>
+    <script src="~/assets/js/magnific-popup.min.js"></script>
+    <script src="~/assets/js/counterup.js"></script>
+    <script src="~/assets/js/wow.js"></script>
+    <script src="~/assets/js/ajax-form.js"></script>
+    <script src="~/assets/js/beforeafter.jquery-1.0.0.min.js"></script>
+    <script src="~/assets/js/main.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

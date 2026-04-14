@@ -1,0 +1,484 @@
+@model ShopMVC.Models.Order
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng #" + Model.OrderId;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* Import Font */
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap');
+
+    /* Scoped CSS */
+    .order-detail-wrapper {
+        font-family: 'Be Vietnam Pro', sans-serif !important;
+        color: #1d1d1f;
+        background: #fff;
+        font-size: 1.6rem; /* Base size */
+        line-height: 1.6;
+    }
+
+        .order-detail-wrapper :root {
+            --primary: #0071e3;
+            --bg-light: #f5f5f7;
+            --text-sub: #86868b;
+            --radius-card: 24px;
+        }
+
+    /* 1. HEADER */
+    .detail-header {
+        background: #f5f5f7;
+        padding: 50px 0;
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .detail-title {
+        font-family: Be VietNam Pro;
+        font-size: 4.5rem;
+        font-weight: 800;
+        margin-bottom: 15px;
+        color: #1d1d1f;
+        letter-spacing: -0.02em;
+    }
+
+    .order-ref {
+        font-size: 1.8rem;
+        color: #86868b;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    /* Status Badge (Pill) */
+    .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 24px;
+        border-radius: 99px;
+        font-size: 1.4rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-top: 15px;
+    }
+
+    .st-pending {
+        background: #fff8e6;
+        color: #ffb302;
+    }
+
+    .st-shipping {
+        background: #e6f2ff;
+        color: #0071e3;
+    }
+
+    .st-success {
+        background: #e8fce8;
+        color: #34c759;
+    }
+
+    .st-danger {
+        background: #ffe6e6;
+        color: #ff3b30;
+    }
+
+    /* 2. CONTENT CARDS */
+    .content-card {
+        background: #fff;
+        border-radius: var(--radius-card);
+        border: 1px solid rgba(0,0,0,0.05);
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    }
+
+    .card-title-custom {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f5f5f7;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* 3. TIMELINE */
+    .timeline-modern {
+        position: relative;
+        padding-left: 40px;
+    }
+
+        .timeline-modern::before {
+            content: '';
+            position: absolute;
+            left: 14px;
+            top: 5px;
+            bottom: 0;
+            width: 2px;
+            background: #e5e5ea;
+        }
+
+    .tl-item {
+        position: relative;
+        margin-bottom: 30px;
+    }
+
+        .tl-item:last-child {
+            margin-bottom: 0;
+        }
+
+    .tl-dot {
+        position: absolute;
+        left: -40px;
+        top: 5px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #fff;
+        border: 3px solid #e5e5ea;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        color: #86868b;
+        z-index: 2;
+    }
+
+    .tl-item.active .tl-dot {
+        border-color: #0071e3;
+        color: #0071e3;
+        background: #e6f2ff;
+    }
+
+    .tl-item.active h5 {
+        color: #0071e3;
+    }
+
+    .tl-content h5 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .tl-content p {
+        font-size: 1.4rem;
+        color: #86868b;
+        margin: 0;
+    }
+
+    /* 4. PRODUCT ITEM */
+    .item-row {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 20px 0;
+        border-bottom: 1px solid #f5f5f7;
+    }
+
+        .item-row:last-child {
+            border-bottom: none;
+        }
+
+    .item-img {
+        width: 90px;
+        height: 90px;
+        border-radius: 16px;
+        object-fit: cover;
+        border: 1px solid #eee;
+    }
+
+    .item-info h5 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .item-meta {
+        font-size: 1.4rem;
+        color: #86868b;
+    }
+
+    .item-price {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #1d1d1f;
+        margin-left: auto;
+    }
+
+    /* 5. SUMMARY & INFO (Right Col) */
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        font-size: 1.6rem;
+        color: #424245;
+    }
+
+    .summary-total {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px dashed #d2d2d7;
+        font-size: 2rem;
+        font-weight: 800;
+        color: #0071e3;
+    }
+
+    .info-group label {
+        display: block;
+        font-size: 1.3rem;
+        color: #86868b;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    .info-group p {
+        font-size: 1.6rem;
+        font-weight: 500;
+        margin-bottom: 20px;
+    }
+
+    /* Buttons */
+    .btn-action {
+        width: 100%;
+        padding: 16px;
+        border-radius: 99px;
+        font-size: 1.6rem;
+        font-weight: 700;
+        text-align: center;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: 0.2s;
+        display: block;
+        margin-bottom: 15px;
+    }
+
+    .btn-back {
+        background: #f5f5f7;
+        color: #1d1d1f;
+    }
+
+        .btn-back:hover {
+            background: #e5e5ea;
+        }
+
+    .btn-cancel {
+        background: #fff0f0;
+        color: #ff3b30;
+    }
+
+        .btn-cancel:hover {
+            background: #ff3b30;
+            color: #fff;
+        }
+
+    /* Animation */
+    .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: 0.6s ease-out;
+    }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+</style>
+
+@{
+    // Logic xử lý trạng thái
+    var statusClass = "st-pending";
+    var statusIcon = "fa-clock";
+    var statusLabel = "Chờ xác nhận";
+    var progressStep = 1; // 1: Đặt, 2: Duyệt, 3: Giao, 4: Xong
+
+    switch (Model.Status)
+    {
+        case "Approved": statusClass = "st-shipping"; statusIcon = "fa-check"; statusLabel = "Đã xác nhận"; progressStep = 2; break;
+        case "Shipping": statusClass = "st-shipping"; statusIcon = "fa-truck-fast"; statusLabel = "Đang giao hàng"; progressStep = 3; break;
+        case "Completed": statusClass = "st-success"; statusIcon = "fa-circle-check"; statusLabel = "Giao thành công"; progressStep = 4; break;
+        case "Cancelled": statusClass = "st-danger"; statusIcon = "fa-ban"; statusLabel = "Đã hủy"; progressStep = 0; break;
+        case "Rejected": statusClass = "st-danger"; statusIcon = "fa-circle-xmark"; statusLabel = "Bị từ chối"; progressStep = 0; break;
+    }
+}
+
+<div class="order-detail-wrapper">
+    <div class="detail-header">
+        <div class="container">
+            <h1 class="detail-title">Chi tiết đơn hàng</h1>
+            <div class="order-ref">
+                <span>Mã đơn: #@Model.OrderId</span>
+                <span style="opacity: 0.3">|</span>
+                <span>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</span>
+            </div>
+            <div class="status-pill @statusClass">
+                <i class="fa-solid @statusIcon"></i> @statusLabel
+            </div>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        <div class="row g-5">
+            <div class="col-lg-8">
+                <div class="content-card reveal">
+                    <h3 class="card-title-custom"><i class="fa-solid fa-timeline"></i> Tiến trình đơn hàng</h3>
+
+                    <div class="timeline-modern">
+                        <div class="tl-item @(progressStep >= 1 || progressStep == 0 ? "active" : "")">
+                            <div class="tl-dot"><i class="fa-solid fa-file-invoice"></i></div>
+                            <div class="tl-content">
+                                <h5>Đơn hàng đã đặt</h5>
+                                <p>@Model.OrderDate.ToString("HH:mm dd/MM/yyyy")</p>
+                            </div>
+                        </div>
+
+                        @if (Model.Status == "Cancelled")
+                        {
+                            <div class="tl-item active">
+                                <div class="tl-dot" style="border-color: #ff3b30; color: #ff3b30; background: #fff0f0;"><i class="fa-solid fa-xmark"></i></div>
+                                <div class="tl-content">
+                                    <h5 style="color: #ff3b30;">Đơn hàng đã hủy</h5>
+                                    <p>Bạn đã hủy đơn hàng này.</p>
+                                </div>
+                            </div>
+                        }
+                        else if (Model.Status == "Rejected")
+                        {
+                            <div class="tl-item active">
+                                <div class="tl-dot" style="border-color: #ff3b30; color: #ff3b30; background: #fff0f0;"><i class="fa-solid fa-ban"></i></div>
+                                <div class="tl-content">
+                                    <h5 style="color: #ff3b30;">Đơn hàng bị từ chối</h5>
+                                    <p>Cửa hàng đã từ chối đơn hàng.</p>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="tl-item @(progressStep >= 2 ? "active" : "")">
+                                <div class="tl-dot"><i class="fa-solid fa-box-open"></i></div>
+                                <div class="tl-content">
+                                    <h5>Đã xác nhận</h5>
+                                    <p>@(Model.ApprovedDate.HasValue? Model.ApprovedDate.Value.ToString("HH:mm dd/MM/yyyy") : "Đang chờ cửa hàng xử lý...")</p>
+                                </div>
+                            </div>
+
+                            <div class="tl-item @(progressStep >= 3 ? "active" : "")">
+                                <div class="tl-dot"><i class="fa-solid fa-truck"></i></div>
+                                <div class="tl-content">
+                                    <h5>Đang giao hàng</h5>
+                                    <p>@(progressStep >= 3 ? "Đơn hàng đang trên đường đến bạn" : "Chưa bắt đầu")</p>
+                                </div>
+                            </div>
+
+                            <div class="tl-item @(progressStep >= 4 ? "active" : "")">
+                                <div class="tl-dot"><i class="fa-solid fa-check"></i></div>
+                                <div class="tl-content">
+                                    <h5>Giao thành công</h5>
+                                    <p>@(Model.Status == "Completed" ? "Cảm ơn bạn đã mua sắm!" : "Chưa hoàn thành")</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="content-card reveal" style="transition-delay: 0.1s">
+                    <h3 class="card-title-custom"><i class="fa-solid fa-bag-shopping"></i> Sản phẩm (@(Model.OrderDetails?.Count ?? 0))</h3>
+
+                    @if (Model.OrderDetails != null)
+                    {
+                        @foreach (var item in Model.OrderDetails)
+                        {
+                            <div class="item-row">
+                                <img src="~/images/products/@(item.Product?.Image ?? "no-image.jpg")" class="item-img" alt="Product">
+                                <div class="item-info">
+                                    <h5>@item.Product?.ProductName</h5>
+                                    <div class="item-meta">
+                                        SL: <strong>@item.Quantity</strong> x @item.Price.ToString("N0")đ
+                                    </div>
+                                </div>
+                                <div class="item-price">
+                                    @((item.Quantity * item.Price).ToString("N0"))đ
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="content-card reveal" style="transition-delay: 0.2s">
+                    <h3 class="card-title-custom"><i class="fa-solid fa-location-dot"></i> Thông tin nhận hàng</h3>
+
+                    <div class="info-group">
+                        <label>Người nhận</label>
+                        <p>@Model.User?.FullName</p>
+                    </div>
+                    <div class="info-group">
+                        <label>Số điện thoại</label>
+                        <p>@Model.User?.Phone</p>
+                    </div>
+                    <div class="info-group">
+                        <label>Địa chỉ</label>
+                        <p>@Model.ShippingAddress</p>
+                    </div>
+
+                </div>
+
+                <div class="content-card reveal" style="transition-delay: 0.3s">
+                    <h3 class="card-title-custom"><i class="fa-solid fa-receipt"></i> Tổng thanh toán</h3>
+
+                    <div class="summary-row">
+                        <span>Tạm tính</span>
+                        <span>@Model.TotalAmount?.ToString("N0")đ</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Phí vận chuyển</span>
+                        <span class="text-success">Miễn phí</span>
+                    </div>
+
+                    <div class="summary-total">
+                        <span>Tổng cộng</span>
+                        <span>@Model.TotalAmount?.ToString("N0")đ</span>
+                    </div>
+
+                    <div class="mt-4">
+                        <a asp-action="Index" class="btn-action btn-back">
+                            <i class="fa-solid fa-arrow-left"></i> Quay lại danh sách
+                        </a>
+
+                        @if (Model.Status == "Pending")
+                        {
+                            <form asp-action="Cancel" asp-route-id="@Model.OrderId" method="post"
+                                  onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn-action btn-cancel">
+                                    Hủy đơn hàng
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Scroll Reveal Animation
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>

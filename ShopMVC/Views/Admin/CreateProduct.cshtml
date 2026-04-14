@@ -1,0 +1,207 @@
+﻿@model ShopMVC.Models.Product
+@{
+    ViewData["Title"] = "Thêm sản phẩm";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 text-gray-800">
+            <i class="fas fa-plus"></i> Thêm sản phẩm mới
+        </h1>
+        <a asp-action="Products" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form asp-action="CreateProduct" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-group">
+                            <label asp-for="ProductName" class="font-weight-bold">Tên sản phẩm <span class="text-danger">*</span></label>
+                            <input asp-for="ProductName" class="form-control" placeholder="Nhập tên sản phẩm..." />
+                            <span asp-validation-for="ProductName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="CategoryId" class="font-weight-bold">Danh mục <span class="text-danger">*</span></label>
+                            <select asp-for="CategoryId" class="form-control">
+                                <option value="">-- Chọn danh mục --</option>
+                                @foreach (var category in ViewBag.Categories as List<ShopMVC.Models.Category>)
+                                {
+                                    <option value="@category.CategoryId">@category.CategoryName</option>
+                                }
+                            </select>
+                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Description" class="font-weight-bold">Mô tả</label>
+                            <textarea asp-for="Description" class="form-control" rows="5" placeholder="Nhập mô tả sản phẩm..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="Price" class="font-weight-bold">Giá bán (đ) <span class="text-danger">*</span></label>
+                                    <input asp-for="Price" type="text" class="form-control" id="priceInput" placeholder="0" />
+                                    <input type="hidden" asp-for="Price" id="priceValue" />
+                                    <span asp-validation-for="Price" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="Stock" class="font-weight-bold">Số lượng <span class="text-danger">*</span></label>
+                                    <input asp-for="Stock" type="number" class="form-control" placeholder="0" />
+                                    <span asp-validation-for="Stock" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="IsActive" class="font-weight-bold">Trạng thái</label>
+                                    <select asp-for="IsActive" class="form-control">
+                                        <option value="true">Hoạt động</option>
+                                        <option value="false">Ngừng bán</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Color" class="font-weight-bold">Màu sắc</label>
+                                    <input asp-for="Color" class="form-control" placeholder="VD: Đen, Trắng, Xanh..." />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Size" class="font-weight-bold">Kích thước</label>
+                                    <input asp-for="Size" class="form-control" placeholder="VD: 128GB, 256GB..." />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="font-weight-bold">Hình ảnh</label>
+                            <div class="custom-file">
+                                <input type="file" name="imageFile" class="custom-file-input" id="imageFile" accept="image/*" onchange="previewImage(this)">
+                                <label class="custom-file-label" for="imageFile">Chọn file ảnh...</label>
+                            </div>
+                            <small class="form-text text-muted">
+                                <i class="fas fa-info-circle"></i> Chấp nhận: JPG, PNG, GIF. Kích thước tối đa: 5MB
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <img id="imagePreview" src="#" alt="Preview" class="img-thumbnail d-none" style="max-width: 300px; max-height: 300px;">
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save"></i> Lưu sản phẩm
+                            </button>
+                            <a asp-action="Products" class="btn btn-secondary btn-lg">
+                                <i class="fas fa-times"></i> Hủy
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h6 class="m-0"><i class="fas fa-lightbulb"></i> Hướng dẫn</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i> Tên sản phẩm phải rõ ràng, dễ hiểu
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i> Chọn đúng danh mục sản phẩm
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i> Giá bán nên là bội số của 1,000đ
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i> Hình ảnh nên có chất lượng tốt
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i> Mô tả chi tiết giúp khách hàng hiểu rõ sản phẩm
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+         // Preview image
+        function previewImage(input) {
+            const preview = document.getElementById('imagePreview');
+            const label = document.querySelector('.custom-file-label');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('d-none');
+                }
+
+                reader.readAsDataURL(input.files[0]);
+                label.textContent = input.files[0].name;
+            }
+        }
+
+        // Format price input
+        const priceInput = document.getElementById('priceInput');
+        const priceValue = document.getElementById('priceValue');
+
+        // Format number with comma separator
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Remove commas and parse
+        function parseNumber(str) {
+            return str.replace(/,/g, '');
+        }
+
+        // Handle input
+        priceInput.addEventListener('input', function(e) {
+            let value = parseNumber(e.target.value);
+
+            // Only allow numbers
+            value = value.replace(/[^\d]/g, '');
+
+            // Update hidden input with raw value
+            priceValue.value = value;
+
+            // Format display value
+            if (value) {
+                e.target.value = formatNumber(value);
+            }
+        });
+
+        // On form submit, ensure hidden input has correct value
+        document.querySelector('form').addEventListener('submit', function() {
+            priceValue.value = parseNumber(priceInput.value);
+        });
+
+    </script>
+}

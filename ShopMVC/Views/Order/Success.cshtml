@@ -1,0 +1,212 @@
+@model int
+
+@{
+    ViewData["Title"] = "Đặt hàng thành công - PhoneShop";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* Import Font */
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap');
+
+    /* Scoped CSS */
+    .success-wrapper {
+        font-family: 'Be Vietnam Pro', sans-serif !important;
+        color: #1d1d1f;
+        background: #fff;
+        font-size: 1.6rem;
+        line-height: 1.6;
+        min-height: 80vh; /* Căn giữa màn hình */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .success-wrapper :root {
+            --primary: #0071e3;
+            --success: #34c759;
+            --bg-light: #f5f5f7;
+        }
+
+    .success-card {
+        max-width: 700px;
+        width: 100%;
+        text-align: center;
+        padding: 20px;
+    }
+
+    /* 1. ANIMATED ICON */
+    .icon-box {
+        width: 120px;
+        height: 120px;
+        background: rgba(52, 199, 89, 0.1);
+        color: var(--success);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 40px;
+        font-size: 5rem;
+        animation: bounceIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @@keyframes bounceIn
+    {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+
+            70% {
+                transform: scale(0.9);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* 2. TYPOGRAPHY */
+        .success-title {
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: #1d1d1f;
+            letter-spacing: -0.02em;
+        }
+
+        .success-desc {
+            font-size: 1.8rem;
+            color: #86868b;
+            margin-bottom: 40px;
+        }
+
+        /* 3. ORDER ID CARD */
+        .order-id-card {
+            background: #f5f5f7;
+            padding: 30px;
+            border-radius: 24px;
+            margin-bottom: 40px;
+            display: inline-block;
+            min-width: 300px;
+        }
+
+        .order-label {
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            color: #86868b;
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .order-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        /* 4. BUTTONS */
+        .action-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-success-action {
+            padding: 18px 40px;
+            border-radius: 99px;
+            font-size: 1.6rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: 0.3s;
+            border: 2px solid transparent;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary-pill {
+            background: #1d1d1f;
+            color: #fff;
+        }
+
+            .btn-primary-pill:hover {
+                background: #000;
+                transform: translateY(-3px);
+                box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+                color: #fff;
+            }
+
+        .btn-outline-pill {
+            background: transparent;
+            color: #1d1d1f;
+            border-color: #e5e5ea;
+        }
+
+            .btn-outline-pill:hover {
+                border-color: #1d1d1f;
+                background: #fff;
+            }
+
+        /* Reveal Animation for text */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 0.6s ease-out;
+        }
+
+            .reveal.active {
+                opacity: 1;
+                transform: translateY(0);
+            }
+    </style>
+
+    <div class="success-wrapper">
+        <div class="success-card">
+            <div class="icon-box">
+                <i class="fa-solid fa-check"></i>
+            </div>
+
+            <div class="content-area reveal">
+                <h1 class="success-title">Đặt hàng thành công!</h1>
+                <p class="success-desc">Cảm ơn bạn đã tin tưởng và mua sắm tại PhoneShop.</p>
+
+                <div class="order-id-card">
+                    <div class="order-label">Mã đơn hàng của bạn</div>
+                    <div class="order-number">#@Model</div>
+                </div>
+
+                <p class="mb-5" style="font-size: 1.5rem; color: #86868b;">
+                    Chúng tôi đã gửi email xác nhận đơn hàng cho bạn.<br>
+                    Nhân viên sẽ sớm liên hệ để xác nhận thông tin giao hàng.
+                </p>
+
+                <div class="action-group">
+                    <a asp-controller="Order" asp-action="Detail" asp-route-id="@Model" class="btn-success-action btn-primary-pill">
+                        Xem chi tiết đơn hàng <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    <a asp-controller="Product" asp-action="Index" class="btn-success-action btn-outline-pill">
+                        <i class="fa-solid fa-bag-shopping"></i> Tiếp tục mua sắm
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple reveal animation on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.querySelector('.reveal').classList.add('active');
+            }, 300);
+        });
+    </script>

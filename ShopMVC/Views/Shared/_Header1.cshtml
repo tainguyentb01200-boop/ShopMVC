@@ -1,0 +1,323 @@
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@inject ShopMVC.Data.ApplicationDbContext DbContext
+
+@{
+    var session = HttpContextAccessor.HttpContext.Session;
+    var isLoggedIn = session.GetInt32("UserId").HasValue;
+    var fullName = session.GetString("FullName") ?? "Guest";
+    var role = session.GetString("Role") ?? "";
+    var cartCount = session.GetInt32("CartCount") ?? 0;
+
+    // Load categories from database dynamically
+    var categories = DbContext.Categories.Where(c => c.IsActive).OrderBy(c => c.CategoryId).ToList();
+}
+
+<style>
+    /* Enhanced User Dropdown Menu */
+    .tp-header-setting {
+        position: relative;
+    }
+
+    .header-setting-toggle {
+        cursor: pointer;
+        padding: 10px 24px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 25px;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .header-setting-toggle:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+    .tp-header-setting ul {
+        position: absolute;
+        top: 120%;
+        right: 0;
+        background: #fff;
+        min-width: 260px;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s;
+        z-index: 9999;
+        padding: 8px 0;
+        list-style: none;
+        margin: 0;
+        display: none;
+    }
+
+    .tp-header-setting:hover ul {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        display: block;
+    }
+
+    .tp-header-setting ul li {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        .tp-header-setting ul li.divider {
+            height: 1px;
+            background: #eee;
+            margin: 8px 12px;
+        }
+
+        .tp-header-setting ul li a,
+        .tp-header-setting ul li button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 20px;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 14px;
+            width: 100%;
+        }
+
+            .tp-header-setting ul li a:hover,
+            .tp-header-setting ul li button:hover {
+                background: #f8f9fa;
+                padding-left: 24px;
+                color: #28a745;
+            }
+
+            .tp-header-setting ul li a i,
+            .tp-header-setting ul li button i {
+                font-size: 16px;
+                width: 20px;
+                text-align: center;
+            }
+
+            .tp-header-setting ul li button.logout-btn:hover {
+                color: #dc3545 !important;
+            }
+
+            .tp-header-setting ul li a strong {
+                color: #007bff;
+            }
+
+        .tp-header-setting ul li form {
+            margin: 0;
+            padding: 0;
+        }
+</style>
+
+<!-- Header area start -->
+<header>
+    <div class="header">
+        <!-- Header Top -->
+        <div class="header-top-area">
+            <div class="header-layout-4">
+                <div class="header-to-main d-none d-sm-flex">
+                    <div class="link-text">
+                        <span>
+                            <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13.9136 19.6698C15.769 20.6036 17.9534 21.277 20.5157 21.5651C21.1375 21.6351 21.6668 21.1368 21.6668 20.5111V18.1791C21.6668 17.682 21.3284 17.2486 20.8461 17.1281L17.9285 16.3987C17.5593 16.3064 17.1688 16.4146 16.8997 16.6837L13.9136 19.6698ZM13.9136 19.6698C10.5382 17.9711 8.2519 15.4103 6.76136 12.7386M6.76136 12.7386C5.34127 10.1933 4.6435 7.54722 4.41447 5.45C4.34797 4.84116 4.84102 4.33325 5.45347 4.33325H7.77864C8.29504 4.33325 8.73966 4.69775 8.84094 5.20412L9.63638 9.1814C9.70742 9.53658 9.59625 9.90376 9.34012 10.1599L6.76136 12.7386Z" stroke="white" stroke-width="2" />
+                                <path d="M14.0337 7.68297C15.0996 7.89016 16.0786 8.41289 16.8436 9.18336C17.6088 9.95381 18.1247 10.9365 18.3243 12.0037M14.1884 3.32275C16.336 3.58645 18.335 4.55708 19.8704 6.08177C21.4057 7.60645 22.3903 9.59855 22.6689 11.7443" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </span>
+                        <a href="tel:+84901234567">+84 90 123 4567</a>
+                    </div>
+                    <div class="header-top-notice d-none d-lg-block">
+                        <p>CHÀO MỪNG BẠN ĐẾN PHONESHOP <span class="text-white">GIẢM GIÁ 25%</span> MÃ "PHONE25"</p>
+                    </div>
+                    <div class="tp-header-top-menu d-flex align-items-center justify-content-end">
+                        @if (isLoggedIn)
+                        {
+                            <div class="header-lang-item tp-header-setting">
+                                <span class="header-setting-toggle text-white" id="header-setting-toggle">
+                                    <i class="fal fa-user-circle"></i> @fullName
+                                </span>
+                                <ul>
+                                    @if (role == "Admin" || role == "Staff")
+                                    {
+                                        <li>
+                                            <a class="furniture-clr-hover" asp-controller="Admin" asp-action="Index">
+                                                <i class="fal fa-tachometer-alt"></i> <strong>Dashboard Admin</strong>
+                                            </a>
+                                        </li>
+                                        <li class="divider"></li>
+                                    }
+                                    <li>
+                                        <a class="furniture-clr-hover" asp-controller="Account" asp-action="Profile">
+                                            <i class="fal fa-user"></i> Thông tin cá nhân
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="furniture-clr-hover" asp-controller="Order" asp-action="Index">
+                                            <i class="fal fa-shopping-bag"></i> Đơn hàng của tôi
+                                        </a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline; width: 100%;">
+                                            <button type="submit" class="furniture-clr-hover logout-btn" style="background:none;border:none;cursor:pointer;padding:0;color:#dc3545;width:100%;text-align:left;">
+                                                <i class="fal fa-sign-out-alt"></i> Đăng xuất
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="header-lang-item">
+                                <a href="@Url.Action("Login", "Account")" class="text-white">Đăng nhập</a>
+                                <span class="text-white mx-2">/</span>
+                                <a href="@Url.Action("Register", "Account")" class="text-white">Đăng ký</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header Bottom - Navigation -->
+        <div class="header-layout-4 header-bottom">
+            <div id="header-sticky" class="header-4">
+                <div class="mega-menu-wrapper">
+                    <div class="header-main-4">
+                        <div class="header-left">
+                            <!-- Logo -->
+                            <div class="header-logo">
+                                <a asp-controller="Home" asp-action="Index">
+                                    <img src="~/assets/imgs/grocery/logo/logo.svg" alt="PhoneShop Logo">
+                                </a>
+                            </div>
+
+                            <!-- Main Menu -->
+                            <div class="mean__menu-wrapper furniture__menu d-none d-lg-block">
+                                <div class="main-menu">
+                                    <nav id="mobile-menu">
+                                        <ul>
+                                            <li>
+                                                <a asp-controller="Home" asp-action="Index">Trang chủ</a>
+                                            </li>
+                                            <li>
+                                                <a asp-controller="Home" asp-action="About">Giới thiệu</a>
+                                            </li>
+                                            <li class="has-dropdown">
+                                                <a asp-controller="Product" asp-action="Index">Sản phẩm</a>
+                                                <ul class="submenu">
+                                                    <li><a asp-controller="Product" asp-action="Index">Tất cả sản phẩm</a></li>
+                                                    @foreach (var category in categories)
+                                                    {
+                                                        <li>
+                                                            <a asp-controller="Product"
+                                                               asp-action="Index"
+                                                               asp-route-categoryId="@category.CategoryId">
+                                                                @category.CategoryName
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </li>
+                                            @if (isLoggedIn)
+                                            {
+                                                <li class="has-dropdown">
+                                                    <a asp-controller="Order" asp-action="Index">Đơn hàng</a>
+                                                    <ul class="submenu">
+                                                        <li><a asp-controller="Order" asp-action="Index">Đơn hàng của tôi</a></li>
+                                                        <li><a asp-controller="Cart" asp-action="Index">Giỏ hàng</a></li>
+                                                    </ul>
+                                                </li>
+                                            }
+                                            <li>
+                                                <a asp-controller="Home" asp-action="Contact">Liên hệ</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Header Right -->
+                        <div class="header-right d-inline-flex align-items-center justify-content-end">
+                            <!-- Search -->
+                            <div class="header-search d-none d-xxl-block">
+                                <form asp-controller="Product" asp-action="Index" method="get">
+                                    <input type="text" name="search" placeholder="Tìm kiếm sản phẩm...">
+                                    <button class="grocery-bg" type="submit">
+                                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M13.4443 13.4445L16.9999 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                            <path d="M15.2222 8.11111C15.2222 12.0385 12.0385 15.2222 8.11111 15.2222C4.18375 15.2222 1 12.0385 1 8.11111C1 4.18375 4.18375 1 8.11111 1C12.0385 1 15.2222 4.18375 15.2222 8.11111Z" stroke="white" stroke-width="2" />
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Header Actions -->
+                            <div class="header-action d-flex align-items-center ml-30">
+                                <!-- Cart -->
+                                <div class="header-action-item">
+                                    <a asp-controller="Cart" asp-action="Index" class="header-action-btn">
+                                        <svg width="21" height="23" viewBox="0 0 21 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M14.0625 10.6C14.0625 12.5883 12.4676 14.2 10.5 14.2C8.53243 14.2 6.9375 12.5883 6.9375 10.6M1 5.8H20M1 5.8V13C1 20.6402 2.33946 22 10.5 22C18.6605 22 20 20.6402 20 13V5.8M1 5.8L2.71856 2.32668C3.12087 1.5136 3.94324 1 4.84283 1H16.1571C17.0568 1 17.8791 1.5136 18.2814 2.32668L20 5.8" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        <span class="header-action-badge grocery-bg cart-count">@cartCount</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Mobile Menu Toggle -->
+                            <div class="header-humbager ml-30 d-lg-none">
+                                <a class="sidebar__toggle" href="javascript:void(0)">
+                                    <div class="bar-icon-2">
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userMenu = document.querySelector('.tp-header-setting');
+            const dropdown = userMenu?.querySelector('ul');
+
+            if (userMenu && dropdown) {
+                let timeout;
+
+                // Show menu
+                userMenu.addEventListener('mouseenter', function() {
+                    clearTimeout(timeout);
+                    dropdown.style.display = 'block';
+                    setTimeout(() => {
+                        dropdown.style.opacity = '1';
+                        dropdown.style.visibility = 'visible';
+                        dropdown.style.transform = 'translateY(0)';
+                    }, 10);
+                });
+
+                // Hide menu with delay
+                userMenu.addEventListener('mouseleave', function() {
+                    timeout = setTimeout(() => {
+                        dropdown.style.opacity = '0';
+                        dropdown.style.visibility = 'hidden';
+                        dropdown.style.transform = 'translateY(10px)';
+                        setTimeout(() => {
+                            dropdown.style.display = 'none';
+                        }, 300);
+                    }, 200); // ← Delay 200ms trước khi ẩn
+                });
+            }
+        });
+    </script>
+</header>
+<!-- Header area end -->

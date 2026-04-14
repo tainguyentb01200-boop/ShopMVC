@@ -1,0 +1,549 @@
+@model CartViewModel
+@{
+    ViewData["Title"] = "Giỏ hàng - PhoneShop";
+}
+
+<style>
+    /* Import Font: Be Vietnam Pro (Đầy đủ các độ đậm từ mỏng đến rất đậm) */
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap');
+
+    :root {
+        --light-bg: #ffffff;
+        --light-surface: #f8f9fa;
+        --light-border: #e2e8f0;
+        --tech-blue: #0066ff;
+        --tech-cyan: #00bcd4;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
+        --shadow-hover: 0 20px 40px -10px rgba(0, 102, 255, 0.15);
+        /* Định nghĩa font chung cho toàn bộ trang */
+        --font-main: 'Be Vietnam Pro', sans-serif;
+    }
+
+    /* Scoped CSS */
+    .cart-wrapper {
+        font-family: var(--font-main) !important;
+        background-color: var(--light-bg);
+        color: var(--text-primary);
+        min-height: 100vh;
+        font-size: 1.6rem;
+        padding-bottom: 80px;
+        position: relative;
+        background-image: radial-gradient(var(--light-border) 1px, transparent 1px);
+        background-size: 30px 30px;
+    }
+
+    /* Header */
+    .cart-header {
+        padding: 60px 0;
+        text-align: center;
+        background: linear-gradient(180deg, rgba(248,249,250,0) 0%, rgba(248,249,250,0.8) 100%);
+        border-bottom: 1px dashed var(--light-border);
+        margin-bottom: 40px;
+    }
+
+    .cart-title {
+        font-family: var(--font-main);
+        font-size: 4rem; /* Giảm nhẹ size so với font cũ để cân đối */
+        font-weight: 800; /* Dùng độ đậm lớn nhất */
+        text-transform: uppercase;
+        color: var(--text-primary);
+        letter-spacing: -1px; /* Thu hẹp khoảng cách chữ để trông gọn hơn */
+        margin-bottom: 10px;
+    }
+
+    .cart-subtitle {
+        font-family: var(--font-main);
+        font-size: 1.6rem;
+        color: var(--text-secondary);
+        font-weight: 400;
+    }
+
+    /* TABLE / CARD STYLE */
+    .cart-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 15px;
+    }
+
+        .cart-table thead th {
+            font-family: var(--font-main);
+            font-size: 1.4rem;
+            font-weight: 700; /* Đậm hơn để làm tiêu đề */
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            border: none;
+            padding: 0 20px 10px;
+            letter-spacing: 0.5px;
+        }
+
+    .cart-item-row {
+        background: #fff;
+        box-shadow: var(--shadow-card);
+        border: 1px solid var(--light-border);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+        .cart-item-row:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--tech-blue);
+        }
+
+    .cart-table td {
+        padding: 20px;
+        vertical-align: middle;
+        background: #fff;
+    }
+
+        .cart-table td:first-child {
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+        }
+
+        .cart-table td:last-child {
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+    /* Item Info */
+    .item-img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid var(--light-border);
+        background: #fff;
+        padding: 2px;
+    }
+
+    .item-name {
+        font-family: var(--font-main);
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        text-decoration: none;
+        display: block;
+        transition: 0.2s;
+        line-height: 1.4;
+    }
+
+        .item-name:hover {
+            color: var(--tech-blue);
+        }
+
+    .item-cat {
+        font-family: var(--font-main);
+        font-weight: 600;
+        font-size: 1.3rem;
+        color: var(--tech-cyan);
+        text-transform: uppercase;
+        background: rgba(0, 188, 212, 0.1);
+        padding: 2px 8px;
+        border-radius: 4px;
+        display: inline-block;
+        margin-top: 5px;
+    }
+
+    /* Group bao quanh: Giữ nguyên */
+    .qty-group {
+        display: inline-flex;
+        align-items: center;
+        background: var(--light-surface); /* Màu xám nhạt */
+        border: 1px solid var(--light-border);
+        border-radius: 8px; /* Bo góc mềm hơn chút */
+        padding: 4px;
+        height: 40px; /* Cố định chiều cao */
+    }
+
+    /* Nút +/- : Giữ nguyên */
+    .qty-btn {
+        width: 32px;
+        height: 32px;
+        background: #fff;
+        border: 1px solid var(--light-border);
+        border-radius: 6px;
+        color: var(--text-primary);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.2s;
+        flex-shrink: 0; /* Không cho nút bị co lại */
+    }
+
+        .qty-btn:hover {
+            background: var(--tech-blue);
+            color: #fff;
+            border-color: var(--tech-blue);
+        }
+
+    .qty-input {
+        /* 1. Kích thước & Hiển thị */
+        width: 40px !important;
+        height: 30px !important; /* Đặt chiều cao cố định để không bị lệch */
+        /* 2. Màu sắc (QUAN TRỌNG) */
+        background-color: transparent !important;
+        color: #000000 !important; /* Ép màu chữ thành ĐEN TUYỀN */
+        font-weight: 800 !important;
+        opacity: 1 !important; /* Đảm bảo không bị mờ */
+        /* 3. Căn chỉnh & Reset */
+        border: none !important;
+        text-align: center;
+        padding: 0 !important;
+        margin: 0 !important;
+        outline: none !important;
+        /* 4. Font chữ */
+        font-family: 'Be Vietnam Pro', sans-serif !important;
+        font-size: 1.6rem !important;
+        /* 5. Khắc phục lỗi trên Firefox */
+        -moz-appearance: textfield;
+    }
+
+        /* Ẩn nút tăng giảm mặc định của trình duyệt */
+        .qty-input::-webkit-outer-spin-button,
+        .qty-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* QUAN TRỌNG: Ẩn nút tăng giảm mặc định của Chrome/Safari/Edge */
+        .qty-input::-webkit-outer-spin-button,
+        .qty-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+    /* Price */
+    .price-text {
+        font-family: var(--font-main); /* Đã đổi font */
+        font-size: 1.6rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        letter-spacing: -0.5px;
+    }
+
+    .total-text {
+        font-family: var(--font-main); /* Đã đổi font */
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--tech-blue);
+        letter-spacing: -0.5px;
+    }
+
+    /* Remove Btn */
+    .btn-remove {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: #fff;
+        border: 1px solid #fee2e2;
+        color: #ef4444;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.2s;
+        cursor: pointer;
+    }
+
+        .btn-remove:hover {
+            background: #ef4444;
+            color: #fff;
+            border-color: #ef4444;
+            transform: rotate(90deg);
+        }
+
+    /* SUMMARY PANEL */
+    .summary-card {
+        background: #fff;
+        border: 1px solid var(--light-border);
+        border-radius: 16px;
+        padding: 30px;
+        position: sticky;
+        top: 100px;
+        box-shadow: var(--shadow-card);
+    }
+
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 20px;
+            right: 20px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--tech-blue), var(--tech-cyan));
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+
+    .summary-title {
+        font-family: var(--font-main);
+        font-size: 2.2rem;
+        font-weight: 800; /* Rất đậm */
+        color: var(--text-primary);
+        margin-bottom: 25px;
+        text-transform: uppercase;
+        padding-top: 10px;
+        letter-spacing: -0.5px;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        font-size: 1.6rem;
+        color: var(--text-secondary);
+    }
+
+        .summary-row span:last-child {
+            font-family: var(--font-main);
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 1.7rem;
+        }
+
+    .summary-total {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 2px dashed var(--light-border);
+        font-size: 2rem;
+        font-family: var(--font-main);
+        font-weight: 800;
+        color: var(--tech-blue);
+        letter-spacing: -1px;
+    }
+
+    /* Buttons */
+    .btn-checkout {
+        display: block;
+        width: 100%;
+        padding: 16px;
+        margin-top: 25px;
+        background: var(--tech-blue);
+        color: #fff;
+        font-family: var(--font-main);
+        font-size: 1.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        text-align: center;
+        text-decoration: none;
+        border: none;
+        clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+        transition: 0.3s;
+    }
+
+        .btn-checkout:hover {
+            background: #0052cc;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 102, 255, 0.3);
+            color: #fff;
+        }
+
+    .btn-clear {
+        color: var(--text-secondary);
+        background: transparent;
+        border: 1px solid var(--light-border);
+        padding: 8px 20px;
+        border-radius: 6px;
+        font-weight: 600;
+        transition: 0.3s;
+        font-family: var(--font-main);
+    }
+
+        .btn-clear:hover {
+            background: #fee2e2;
+            color: #ef4444;
+            border-color: #fee2e2;
+            text-decoration: none;
+        }
+
+    /* Empty State */
+    .empty-cart {
+        text-align: center;
+        padding: 80px 0;
+    }
+
+    .empty-icon {
+        font-size: 8rem;
+        background: linear-gradient(135deg, var(--tech-blue), var(--tech-cyan));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+        opacity: 0.8;
+    }
+
+    /* Animation */
+    .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: 0.5s ease-out;
+    }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+</style>
+
+<div class="cart-wrapper">
+    <div class="cart-header">
+        <div class="container">
+            <h1 class="cart-title">Giỏ Hàng Công Nghệ</h1>
+            @if (!Model.IsEmpty)
+            {
+                <p class="cart-subtitle">Đang xử lý <strong class="text-primary">@Model.CartItems.Count</strong> sản phẩm trong hệ thống</p>
+            }
+        </div>
+    </div>
+
+    <div class="container">
+        @if (Model.IsEmpty)
+        {
+            <div class="empty-cart reveal">
+                <div class="empty-icon"><i class="fa-solid fa-cube"></i></div>
+                <h2 style="font-family: var(--font-main); font-size: 3rem; font-weight: 800; color: var(--text-primary); margin-bottom: 10px;">Dữ liệu trống</h2>
+                <p style="font-size: 1.8rem; color: var(--text-secondary); margin-bottom: 30px;">Bạn chưa thêm thiết bị nào vào danh sách.</p>
+                <a asp-controller="Product" asp-action="Index" class="btn-checkout" style="max-width: 300px; margin: 0 auto; background: var(--text-primary);">
+                    Quay lại cửa hàng
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="row g-5">
+                <div class="col-lg-8">
+                    <table class="cart-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 45%">Thông tin sản phẩm</th>
+                                <th style="width: 15%" class="text-center">Đơn giá</th>
+                                <th style="width: 20%" class="text-center">Số lượng</th>
+                                <th style="width: 15%" class="text-end">Thành tiền</th>
+                                <th style="width: 5%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.CartItems)
+                            {
+                                <tr class="cart-item-row reveal" data-cartdetail-id="@item.CartDetailId">
+                                    <td>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId">
+                                                <img src="@ShopMVC.Helpers.ImageHelper.GetProductImagePath(item.Image)"
+                                                     alt="@item.ProductName" class="item-img">
+                                            </a>
+                                            <div>
+                                                <a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId" class="item-name">
+                                                    @item.ProductName
+                                                </a>
+                                                <span class="item-cat"># @item.CategoryName</span>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <span class="item-price price-text" data-price="@item.UnitPrice">
+                                            @item.UnitPrice.ToString("N0")
+                                        </span>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <div class="qty-group">
+                                            <button class="qty-btn update-quantity-btn"
+                                                    data-cart-detail-id="@item.CartDetailId"
+                                                    data-action="decrease">
+                                                <i class="fa-solid fa-minus"></i>
+                                            </button>
+
+                                            <input type="number" class="qty-input quantity-input"
+                                                   value="@item.Quantity" min="1" max="@item.AvailableStock"
+                                                   data-cart-detail-id="@item.CartDetailId"
+                                                   readonly>
+
+                                            <button class="qty-btn update-quantity-btn"
+                                                    data-cart-detail-id="@item.CartDetailId"
+                                                    data-action="increase">
+                                                <i class="fa-solid fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+
+                                    <td class="text-end">
+                                        <span class="item-subtotal total-text">
+                                            @item.LineTotal.GetValueOrDefault().ToString("N0")
+                                        </span>
+                                    </td>
+
+                                    <td class="text-end">
+                                        <button class="btn-remove remove-cart-item-btn"
+                                                data-cart-detail-id="@item.CartDetailId">
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <div class="d-flex justify-content-between align-items-center mt-5 reveal">
+                        <a asp-controller="Product" asp-action="Index" style="text-decoration: none; color: var(--text-secondary); font-weight: 500;">
+                            <i class="fa-solid fa-angle-left me-2"></i> Tiếp tục mua sắm
+                        </a>
+                        <button class="btn-clear clear-cart-btn">
+                            <i class="fa-solid fa-trash-can me-2"></i> Xóa danh sách
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="summary-card reveal" style="transition-delay: 0.2s">
+                        <h3 class="summary-title">Tổng kết đơn hàng</h3>
+
+                        <div class="summary-row">
+                            <span>Tạm tính</span>
+                            <span class="cart-subtotal">@Model.SubTotal.ToString("N0")đ</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Vận chuyển</span>
+                            <span class="text-success cart-shipping" style="color: var(--tech-cyan) !important; font-weight: 700;">
+                                @(Model.ShippingFee == 0 ? "Miễn phí" : Model.ShippingFee.ToString("N0") + "đ")
+                            </span>
+                        </div>
+
+                        <div class="summary-total">
+                            <span>Tổng cộng</span>
+                            <span class="cart-total-amount">@Model.Total.ToString("N0")đ</span>
+                        </div>
+
+                        <a asp-controller="Cart" asp-action="Checkout" class="btn-checkout">
+                            Thanh toán ngay
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/cart.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+}

@@ -1,0 +1,666 @@
+@model List<ShopMVC.Models.Product>
+@{
+    ViewData["Title"] = "Trang chủ";
+    Layout = "_Layout";
+}
+
+<style>
+    /* 1. ĐỔI SANG PHÔNG BE VIETNAM PRO (Hỗ trợ tiếng Việt cực tốt) */
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap');
+
+    :root {
+        --primary: #0071e3;
+        --primary-dark: #005bb5;
+        --bg-body: #f5f5f7;
+        --text-main: #1d1d1f;
+        --text-sub: #86868b;
+        --shadow-md: 0 12px 32px rgba(0,0,0,0.08);
+        --radius-xl: 24px;
+        --radius-lg: 18px;
+        --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    body {
+        /* 2. CẤU HÌNH LẠI PHÔNG CHỮ VÀ RENDERING */
+        font-family: 'Be Vietnam Pro', Times, serif;
+        background-color: var(--bg-body);
+        color: var(--text-main);
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased; /* Làm mượt chữ trên Mac/Chrome */
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+        overflow-x: hidden;
+    }
+
+    /* ... CÁC ANIMATION CŨ GIỮ NGUYÊN ... */
+    .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s ease-out;
+    }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    @@keyframes float {
+        0%, 100% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-15px);
+        }
+    }
+
+    /* ===== HERO SECTION (TĂNG SIZE) ===== */
+    .hero-section {
+        background: #000;
+        position: relative;
+        padding: 140px 0 120px; /* Tăng padding để thoáng hơn */
+        overflow: hidden;
+        color: #fff;
+    }
+
+    .hero-glow {
+        position: absolute;
+        top: -20%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80vw;
+        height: 80vw;
+        background: radial-gradient(circle, rgba(41, 151, 255, 0.2) 0%, rgba(0,0,0,0) 60%);
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-badge {
+        display: inline-block;
+        padding: 10px 20px; /* To hơn */
+        border-radius: 99px;
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+        font-size: 2rem; /* Tăng size chữ badge */
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 28px;
+    }
+
+    .hero-title {
+        /* 3. TIÊU ĐỀ LỚN HƠN RÕ RỆT */
+        font-family: 'Be Vietnam Pro';
+        font-size: clamp(3.5rem, 6vw, 5.5rem);
+        font-weight: 600;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        background: linear-gradient(135deg, #fff 30%, #a1a1a6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 24px;
+    }
+
+    .hero-desc {
+        font-size: 2.3rem; /* Tăng mô tả */
+        color: #a1a1a6;
+        max-width: 600px;
+        margin-bottom: 40px;
+        font-weight: 400;
+    }
+
+    .btn-premium {
+        padding: 16px 40px; /* Nút bấm to hơn */
+        border-radius: 99px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: var(--transition);
+        text-decoration: none;
+    }
+
+    .btn-primary-glow {
+        background: var(--primary);
+        color: #fff;
+        border: none;
+    }
+
+        .btn-primary-glow:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(0,113,227,0.5);
+            color: #fff;
+        }
+
+    .btn-glass {
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+
+        .btn-glass:hover {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+        }
+
+    .hero-image-wrapper {
+        animation: float 6s ease-in-out infinite;
+    }
+
+        .hero-image-wrapper img {
+            filter: drop-shadow(0 30px 60px rgba(0,0,0,0.6));
+        }
+
+    /* ===== FEATURES ===== */
+    .features-section {
+        background: #fff;
+        padding: 80px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .feature-box {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 24px;
+        border-radius: var(--radius-lg);
+        background: #fff;
+        transition: var(--transition);
+    }
+
+        .feature-box:hover {
+            background: #fbfbfd;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+    .feature-icon-circle {
+        width: 60px;
+        height: 60px; /* Icon to hơn */
+        border-radius: 50%;
+        background: rgba(0, 113, 227, 0.08);
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        transition: var(--transition);
+    }
+
+    .feature-box:hover .feature-icon-circle {
+        background: var(--primary);
+        color: #fff;
+    }
+
+    /* ===== PRODUCT CARD (SỬA LẠI FONT & SIZE) ===== */
+    .section-header {
+        margin: 80px 0 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+
+    .section-title h2 {
+        font-weight: 800;
+        font-size: 2.8rem;
+        letter-spacing: -0.02em;
+        margin-bottom: 10px;
+        color: #1d1d1f;
+    }
+
+    .section-title p {
+        font-size: 1.2rem;
+    }
+
+    .product-card {
+        background: #fff;
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+        border: 1px solid rgba(0,0,0,0.04);
+        transition: var(--transition);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .product-card:hover {
+            border-color: transparent;
+            box-shadow: var(--shadow-md);
+            transform: translateY(-10px);
+        }
+
+    .card-badge-group {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        z-index: 5;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .badge-pill {
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-size: 1.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        backdrop-filter: blur(8px);
+    }
+
+    .badge-new {
+        background: rgba(0, 113, 227, 0.1);
+        color: var(--primary);
+    }
+
+    .badge-hot {
+        background: rgba(255, 59, 48, 0.1);
+        color: #ff3b30;
+    }
+
+    .card-img-area {
+        height: 320px; /* Ảnh to hơn */
+        padding: 40px;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .card-img-area img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+            transition: transform 0.5s;
+        }
+
+    .product-card:hover .card-img-area img {
+        transform: scale(1.12);
+    }
+
+    .card-details {
+        padding: 24px 28px;
+        background: #fbfbfd;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        border-top: 1px solid rgba(0,0,0,0.03);
+    }
+
+    .product-cat {
+        font-size: 1.9rem;
+        color: var(--text-sub);
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+
+    .product-name a {
+        /* 4. SỬA TÊN SẢN PHẨM: TO VÀ ĐẬM HƠN */
+        color: var(--text-main);
+        text-decoration: none;
+        font-size: 1.85rem; /* Tăng size */
+        font-weight: 700; /* Đậm hơn */
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        transition: color 0.2s;
+    }
+
+        .product-name a:hover {
+            color: var(--primary);
+        }
+
+    .card-bottom {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .price-tag {
+        /* 5. GIÁ TIỀN RÕ RÀNG HƠN */
+        font-size: 1.9rem;
+        font-weight: 700;
+        color: #1d1d1f;
+        letter-spacing: -0.5px;
+    }
+
+    .btn-cart-circle {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #fff;
+        border: 1px solid rgba(0,0,0,0.1);
+        color: #1d1d1f;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: var(--transition);
+        font-size: 1.2rem;
+    }
+
+        .btn-cart-circle:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+            transform: rotate(90deg);
+            box-shadow: 0 4px 15px rgba(0, 113, 227, 0.4);
+        }
+
+    /* ===== CTA BANNER ===== */
+    .cta-modern {
+        margin: 100px 0;
+        border-radius: var(--radius-xl);
+        background: #000;
+        color: #fff;
+        padding: 80px 60px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+        .cta-modern::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(45deg, var(--primary), transparent);
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.4;
+            top: -150px;
+            right: -150px;
+        }
+
+    /* TOAST */
+    .toast-premium {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        padding: 16px 24px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: 15px;
+        animation: slideInRight 0.4s;
+        min-width: 340px;
+    }
+
+        @@keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(50px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+</style>
+
+<section class="hero-section">
+    <div class="hero-glow"></div>
+    <div class="container hero-content">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-5 mb-lg-0 reveal">
+                <span class="hero-badge">New Release 2024</span>
+                <h1 class="hero-title">Titanium.<br>Sức mạnh tối thượng.</h1>
+                <p class="hero-desc">
+                    Thiết kế Titan chuẩn hàng không vũ trụ. Chip A17 Pro thay đổi cuộc chơi. Trải nghiệm ngay hôm nay.
+                </p>
+                <div class="d-flex gap-3">
+                    <a style="font-size: 2rem" asp-controller="Product" asp-action="Index" class="btn btn-premium btn-primary-glow">
+                        Mua ngay <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    <a style="font-size: 2rem" asp-controller="Product" asp-action="Index" class="btn btn-premium btn-glass">
+                        Xem chi tiết
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center reveal" style="transition-delay: 0.2s">
+                <div class="hero-image-wrapper">
+                    <img src="~/images/products/iphone15pro.jpg" alt="iPhone 15 Pro" class="img-fluid" style="max-height: 550px;" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features-section">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-6 col-md-3 reveal">
+                <div class="feature-box">
+                    <div class="feature-icon-circle">
+                        <i class="fa-light fa-truck-fast"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold text-dark" style=" font-size: 2rem">Giao nhanh 2h</div>
+                        <div class="small text-muted" style=" font-size: 2rem">FreeShip nội thành</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3 reveal" style="transition-delay: 0.1s; font-size: 2rem">
+                <div class="feature-box">
+                    <div class="feature-icon-circle" >
+                        <i class="fa-light fa-shield-check"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold text-dark" style=" font-size: 2rem">Chính hãng 100%</div>
+                        <div class="small text-muted" style=" font-size: 2rem">Bảo hành Apple VN</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3 reveal" style="transition-delay: 0.2s">
+                <div class="feature-box">
+                    <div class="feature-icon-circle">
+                        <i class="fa-light fa-rotate-left"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold text-dark" style=" font-size: 2rem">30 ngày đổi trả</div>
+                        <div class="small text-muted" style=" font-size: 2rem">Lỗi là đổi mới</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3 reveal" style="transition-delay: 0.3s">
+                <div class="feature-box">
+                    <div class="feature-icon-circle">
+                        <i class="fa-light fa-credit-card"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold text-dark" style=" font-size: 2rem">Trả góp 0%</div>
+                        <div class="small text-muted" style=" font-size: 2rem">Thủ tục đơn giản</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="section-header reveal">
+            <div class="section-title">
+                <h2 style=" font-family: 'Be Vietnam Pro'; font-size:5rem">Sản phẩm nổi bật</h2>
+                <p class="text-muted" style=" font-family: 'Be Vietnam Pro'; font-size:3rem">Tuyển tập những công nghệ tiên tiến nhất dành cho bạn.</p>
+            </div>
+            <a asp-controller="Product" asp-action="Index" class="btn btn-outline-dark rounded-pill px-4" style=" font-family: 'Be Vietnam Pro'; font-size:3rem">
+                Xem tất cả
+            </a>
+        </div>
+
+        <div class="row g-4">
+            @foreach (var p in Model)
+                        {
+            <div class="col-6 col-md-4 col-lg-3 reveal">
+                <article class="product-card">
+                    <div class="card-badge-group">
+                        @if (p.Stock == 0)
+                                                {
+                        <span class="badge-pill bg-secondary text-white">Sold Out</span>
+                                                }
+                                                else if (p.Stock < 10)
+                        {
+                            <span class="badge-pill badge-hot">Selling Fast</span>
+                        }
+                        else
+                        {
+                            <span class="badge-pill badge-new">New</span>
+                        }
+                    </div>
+
+                    <div class="card-img-area">
+                        <a asp-controller="Product" asp-action="Detail" asp-route-id="@p.ProductId">
+                            <img src="~/images/products/@(p.Image ?? "no-image.jpg")" alt="@p.ProductName" />
+                        </a>
+                    </div>
+
+                    <div class="card-details">
+                        <div class="product-cat">@p.Category?.CategoryName</div>
+                        <h3 class="product-name">
+                            <a asp-controller="Product" asp-action="Detail" asp-route-id="@p.ProductId" title="@p.ProductName">
+                                @p.ProductName
+                            </a>
+                        </h3>
+
+                        <div class="card-bottom">
+                            <div class="price-tag">@p.Price.ToString("N0")₫</div>
+                            <button type="button"
+                                    class="btn-cart-circle add-to-cart-btn"
+                                    data-product-id="@p.ProductId"
+                                    title="Thêm vào giỏ">
+                                <i class="fa-regular fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+                        }
+        </div>
+    </div>
+</section>
+
+<div class="container pb-5">
+    <div class="cta-modern reveal">
+        <div style="position: relative; z-index: 2;">
+            <h2 class="display-5 fw-bold mb-2" style="font-size: 5.1rem; color: whitesmoke; font-family: 'Be Vietnam Pro'">Nâng cấp lên Pro</h2>
+            <p class="text-white-50 mb-4" style="font-size: 3.1rem">Trải nghiệm sức mạnh xử lý đỉnh cao cùng camera 48MP.</p>
+            <a href="#" style="font-size: 2.5rem" class="btn btn-light rounded-pill px-4 py-2 fw-bold">Khám phá ngay</a>
+        </div>
+        <div class="d-none d-md-block">
+            <i class="fa-brands fa-apple" style="font-size: 8rem; opacity: 0.2;"></i>
+        </div>
+    </div>
+</div>
+
+<div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
+
+<script>
+    // 1. Scroll Reveal Animation
+    // Hiệu ứng các phần tử tự động hiện ra khi cuộn chuột tới
+    const observerOptions = {
+        threshold: 0.15,
+        rootMargin: "0px 0px -50px 0px"
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                observer.unobserve(entry.target); // Chỉ chạy 1 lần
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // 2. Hàm Toast Notification (Premium Style)
+    function showToast(message, type = 'success') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast-premium`;
+
+        const iconColor = type === 'success' ? '#28a745' : '#dc3545';
+        const iconClass = type === 'success' ? 'fa-circle-check' : 'fa-circle-xmark';
+
+        toast.innerHTML = `
+            <i class="fa-solid ${iconClass}" style="color: ${iconColor}; font-size: 1.5rem;"></i>
+            <div>
+                <div style="font-weight: 700; color: #1d1d1f; margin-bottom: 2px;">${type === 'success' ? 'Thành công' : 'Lỗi'}</div>
+                <div style="font-size: 0.9rem; color: #6e6e73;">${message}</div>
+            </div>
+        `;
+
+        container.appendChild(toast);
+
+        // Auto remove
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(-20px)';
+            setTimeout(() => toast.remove(), 400);
+        }, 3000);
+    }
+
+    // 3. Logic Add to Cart (Giữ nguyên logic của bạn nhưng tối ưu UX)
+    document.addEventListener('click', async (e) => {
+        const btn = e.target.closest('.add-to-cart-btn');
+        if (!btn) return;
+
+        const originalContent = btn.innerHTML;
+        // Hiệu ứng loading nhỏ gọn
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="font-size: 0.9rem"></i>';
+        btn.style.pointerEvents = 'none'; // Chặn click liên tục
+
+        const id = btn.dataset.productId;
+
+        try {
+            const res = await fetch(`/Cart/AddToCart?productId=${id}&quantity=1`, { method: 'POST' });
+            if (res.ok) {
+                const data = await res.json();
+                if (data.success) {
+                    showToast('Đã thêm sản phẩm vào giỏ hàng!', 'success');
+
+                    // Cập nhật số lượng trên Header (nếu có class .cart-count)
+                    const cartCountEl = document.querySelector('.cart-count');
+                    if(cartCountEl) {
+                        cartCountEl.innerText = data.cartCount;
+                        cartCountEl.classList.add('animate__bounceIn'); // Nếu dùng Animate.css
+                    }
+                } else {
+                    showToast(data.message, 'error');
+                     if (data.message.toLowerCase().includes("đăng nhập")) {
+                        setTimeout(() => window.location.href = '/Account/Login', 1500);
+                    }
+                }
+            } else {
+                showToast('Lỗi kết nối máy chủ', 'error');
+            }
+        } catch (err) {
+            console.error(err);
+            showToast('Vui lòng kiểm tra kết nối mạng', 'error');
+        } finally {
+            setTimeout(() => {
+                btn.innerHTML = originalContent;
+                btn.style.pointerEvents = 'auto';
+            }, 500);
+        }
+    });
+</script>

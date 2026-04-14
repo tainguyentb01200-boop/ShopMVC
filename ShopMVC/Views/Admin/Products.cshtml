@@ -1,0 +1,164 @@
+﻿@model ShopMVC.ViewModels.ProductListViewModel
+@{
+    ViewData["Title"] = "Quản lý Sản phẩm";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 text-gray-800">Quản lý Sản phẩm</h1>
+        <a asp-action="CreateProduct" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Thêm sản phẩm
+        </a>
+    </div>
+
+    <!-- Filter -->
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form method="get" class="row">
+                <div class="col-md-3">
+                    <label class="small text-muted mb-1">Danh mục</label>
+                    <select name="categoryId" class="form-control" onchange="this.form.submit()">
+                        <option value="">-- Tất cả danh mục --</option>
+                        @foreach (var cat in Model.Categories)
+                        {
+                            <option value="@cat.CategoryId" selected="@(Model.SelectedCategoryId == cat.CategoryId)">
+                                @cat.CategoryName
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <!-- ← THÊM DROPDOWN TRẠNG THÁI Ở ĐÂY -->
+                <div class="col-md-2">
+                    <label class="small text-muted mb-1">Trạng thái</label>
+                    <select name="isActive" class="form-control" onchange="this.form.submit()">
+                        <option value="">Tất cả</option>
+                        <option value="true" selected="@(Context.Request.Query["isActive"] == "true")">Hoạt động</option>
+                        <option value="false" selected="@(Context.Request.Query["isActive"] == "false")">Đã xóa</option>
+                    </select>
+                </div>
+
+                <div class="col-md-5">
+                    <label class="small text-muted mb-1">Tìm kiếm</label>
+                    <input type="text" name="search" class="form-control" placeholder="Tìm kiếm sản phẩm..." value="@Model.SearchTerm">
+                </div>
+                <div class="col-md-2">
+                    <label class="small text-muted mb-1">&nbsp;</label>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-search"></i> Tìm
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Products Table -->
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Hình ảnh</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Danh mục</th>
+                            <th>Giá</th>
+                            <th>Tồn kho</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Model.Products)
+                        {
+                            <tr>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(product.Image))
+                                    {
+                                        <img src="~/images/products/@product.Image" alt="@product.ProductName"
+                                             style="width: 50px; height: 50px; object-fit: cover;" class="rounded">
+                                    }
+                                    else
+                                    {
+                                        <div style="width: 50px; height: 50px; background: #ddd;" class="rounded"></div>
+                                    }
+                                </td>
+                                <td>@product.ProductName</td>
+                                <td>@product.Category?.CategoryName</td>
+                                <td>@product.Price.ToString("N0") đ</td>
+                                <td>
+                                    <span class="badge badge-@(product.Stock < 10 ? "danger" : "success")">
+                                        @product.Stock
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-@(product.IsActive ? "success" : "secondary")">
+                                        @(product.IsActive ? "Hoạt động" : "Ngừng bán")
+                                    </span>
+                                </td>
+                                <td>
+                                    <a asp-action="EditProduct" asp-route-id="@product.ProductId" class="btn btn-sm btn-info">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form asp-action="DeleteProduct" asp-route-id="@product.ProductId" method="post" class="d-inline"
+                                          onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            @if (Model.TotalPageCount > 1)
+            {
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        @if (Model.HasPreviousPage)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-route-page="@(Model.Page - 1)"
+                                   asp-route-categoryId="@Model.SelectedCategoryId"
+                                   asp-route-search="@Model.SearchTerm">
+                                    Trước
+                                </a>
+                            </li>
+                        }
+
+                        @for (int i = 1; i <= Model.TotalPageCount; i++)
+                        {
+                            <li class="page-item @(i == Model.Page ? "active" : "")">
+                                <a class="page-link" asp-route-page="@i"
+                                   asp-route-categoryId="@Model.SelectedCategoryId"
+                                   asp-route-search="@Model.SearchTerm">
+                                    @i
+                                </a>
+                            </li>
+                        }
+
+                        @if (Model.HasNextPage)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-route-page="@(Model.Page + 1)"
+                                   asp-route-categoryId="@Model.SelectedCategoryId"
+                                   asp-route-search="@Model.SearchTerm">
+                                    Sau
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            }
+
+            <p class="text-center text-muted">
+                Hiển thị @Model.Products.Count / @Model.TotalProducts sản phẩm
+            </p>
+        </div>
+    </div>
+</div>

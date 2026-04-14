@@ -1,0 +1,445 @@
+@model List<ShopMVC.Models.Order>
+@{
+    ViewData["Title"] = "Đơn hàng của tôi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* Import Font */
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap');
+
+    /* Scoped CSS */
+    .order-page-wrapper {
+        font-family: 'Be Vietnam Pro', sans-serif !important;
+        color: #1d1d1f;
+        background: #fff;
+        font-size: 1.8rem; /* Base size lớn */
+        line-height: 1.5;
+    }
+
+        .order-page-wrapper :root {
+            --primary: #0071e3;
+            --bg-light: #f5f5f7;
+            --text-sub: #86868b;
+            --radius-card: 24px;
+        }
+
+    /* 1. HEADER AREA */
+    .page-header {
+        background: #f5f5f7;
+        padding: 30px 0;
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .page-title {
+        font-family: Be VietNam Pro;
+        font-size: 5.5rem;
+        font-weight: 800;
+        margin-bottom: 15px;
+        letter-spacing: -0.02em;
+        color: #1d1d1f;
+    }
+
+    .page-subtitle {
+        font-size: 2rem;
+        color: #86868b;
+        font-weight: 400;
+    }
+
+    /* 2. STATS CARDS */
+    .stats-container {
+        margin-bottom: 50px;
+    }
+
+    .stat-card {
+        background: #fff;
+        border-radius: var(--radius-card);
+        padding: 30px;
+        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        transition: 0.3s;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+        }
+
+    .stat-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: rgba(0, 113, 227, 0.1);
+        color: #0071e3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+    }
+
+        .stat-icon.green {
+            background: rgba(52, 199, 89, 0.1);
+            color: #34c759;
+        }
+
+        .stat-icon.orange {
+            background: rgba(255, 149, 0, 0.1);
+            color: #ff9500;
+        }
+
+    .stat-info h4 {
+        font-size: 1.6rem;
+        color: #86868b;
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
+
+    .stat-info .value {
+        font-size: 2.8rem;
+        font-weight: 800;
+        color: #1d1d1f;
+        line-height: 1;
+    }
+
+    /* 3. ORDER CARD */
+    .order-card {
+        background: #fff;
+        border-radius: var(--radius-card);
+        border: 1px solid rgba(0,0,0,0.05);
+        margin-bottom: 30px;
+        overflow: hidden;
+        transition: 0.3s;
+    }
+
+        .order-card:hover {
+            border-color: #0071e3;
+            box-shadow: 0 10px 40px rgba(0, 113, 227, 0.1);
+        }
+
+    .order-header {
+        background: #fbfbfd;
+        padding: 25px 30px;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .order-id {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #1d1d1f;
+    }
+
+    .order-date {
+        font-size: 1.6rem;
+        color: #86868b;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Status Badges (Pill Style) */
+    .status-badge {
+        padding: 10px 24px;
+        border-radius: 99px;
+        font-size: 1.4rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .st-pending {
+        background: #fff8e6;
+        color: #ffb302;
+    }
+
+    .st-shipping {
+        background: #e6f2ff;
+        color: #0071e3;
+    }
+
+    .st-success {
+        background: #e8fce8;
+        color: #34c759;
+    }
+
+    .st-danger {
+        background: #ffe6e6;
+        color: #ff3b30;
+    }
+
+    .order-body {
+        padding: 30px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+
+    .info-item label {
+        font-size: 1.4rem;
+        color: #86868b;
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+
+    .info-item span {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1d1d1f;
+    }
+
+    .info-item .price {
+        color: #0071e3;
+    }
+
+    .order-actions {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        padding-top: 20px;
+        border-top: 1px solid #f5f5f7;
+    }
+
+    .btn-action {
+        padding: 14px 30px;
+        border-radius: 99px;
+        font-size: 1.6rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: 0.2s;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-view {
+        background: #f5f5f7;
+        color: #1d1d1f;
+    }
+
+        .btn-view:hover {
+            background: #e5e5ea;
+            color: #000;
+        }
+
+    .btn-cancel {
+        background: #fff0f0;
+        color: #ff3b30;
+    }
+
+        .btn-cancel:hover {
+            background: #ff3b30;
+            color: #fff;
+        }
+
+    /* Empty State */
+    .empty-state {
+        padding: 80px 0;
+        text-align: center;
+    }
+
+    .empty-icon {
+        font-size: 8rem;
+        color: #e5e5ea;
+        margin-bottom: 20px;
+    }
+
+    .btn-shop-now {
+        background: #0071e3;
+        color: #fff;
+        padding: 18px 40px;
+        border-radius: 99px;
+        font-size: 1.8rem;
+        font-weight: 700;
+        text-decoration: none;
+        margin-top: 30px;
+        display: inline-block;
+    }
+
+        .btn-shop-now:hover {
+            background: #005bb5;
+            color: #fff;
+            box-shadow: 0 10px 30px rgba(0,113,227,0.3);
+        }
+
+    /* Animation */
+    .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: 0.6s ease-out;
+    }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    .order-card.cancelled {
+        opacity: 0.7;
+        background-color: #f8f9fa;
+    }
+
+        .order-card.cancelled .order-card-header {
+            background-color: #eee;
+        }
+</style>
+
+<div class="order-page-wrapper">
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title">Đơn hàng của tôi</h1>
+            <p class="page-subtitle">Quản lý và theo dõi lịch sử mua sắm của bạn</p>
+        </div>
+    </section>
+
+    <div class="container pb-5">
+        @if (Model.Any())
+        {
+            <div class="row g-4 stats-container reveal">
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-solid fa-bag-shopping"></i></div>
+                        <div class="stat-info">
+                            <h4>Tổng đơn hàng</h4>
+                            <div class="value">@Model.Count</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <div class="stat-icon green"><i class="fa-solid fa-dollar-sign"></i></div>
+                        <div class="stat-info">
+                            <h4>Đã chi tiêu</h4>
+                            <div class="value">
+                                @(Model.Where(o => o.Status != "Cancelled" && o.Status != "Rejected")
+                                                            .Sum(o => o.TotalAmount ?? 0).ToString("N0"))đ
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <div class="stat-icon orange"><i class="fa-regular fa-clock"></i></div>
+                        <div class="stat-info">
+                            <h4>Chờ xử lý</h4>
+                            <div class="value">@Model.Count(o => o.Status == "Pending")</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-list">
+                @foreach (var order in Model.OrderByDescending(o => o.OrderDate))
+                {
+                    // Logic badge màu sắc
+                    var badgeClass = "st-pending";
+                    var statusIcon = "fa-hourglass-half";
+                    var statusLabel = "Chờ xác nhận";
+                    var isCancelled = false;
+
+                    switch (order.Status)
+                    {
+                        case "Approved": badgeClass = "st-shipping"; statusIcon = "fa-check"; statusLabel = "Đã xác nhận"; break;
+                        case "Shipping": badgeClass = "st-shipping"; statusIcon = "fa-truck-fast"; statusLabel = "Đang giao"; break;
+                        case "Completed": badgeClass = "st-success"; statusIcon = "fa-circle-check"; statusLabel = "Hoàn thành"; break;
+                        case "Cancelled": badgeClass = "st-danger"; statusIcon = "fa-ban"; statusLabel = "Đã hủy"; isCancelled = true; break;
+                        case "Rejected": badgeClass = "st-danger"; statusIcon = "fa-circle-xmark"; statusLabel = "Từ chối"; isCancelled = true; break;
+                    }
+
+                    <div class="order-card reveal @(isCancelled ? "cancelled" : "")">
+                        <div class="order-header">
+                            <div>
+                                <div class="order-id">#@order.OrderId</div>
+                                <div class="order-date">
+                                    <i class="fa-regular fa-calendar"></i> @order.OrderDate.ToString("dd/MM/yyyy HH:mm")
+                                </div>
+                            </div>
+                            <div class="status-badge @badgeClass">
+                                <i class="fa-solid @statusIcon me-2"></i> @statusLabel
+                            </div>
+                        </div>
+
+                        <div class="order-body">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>Số lượng</label>
+                                    <span>@(order.OrderDetails?.Sum(od => od.Quantity) ?? 0) sản phẩm</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Tổng tiền</label>
+                                    <span class="price" style="@(isCancelled ? "text-decoration: line-through; color: #999;" : "")">
+                                        @order.TotalAmount?.ToString("N0")đ
+                                    </span>
+                                </div>
+                                <div class="info-item" style="grid-column: span 2;">
+                                    <label>Địa chỉ giao hàng</label>
+                                    <span style="font-size: 1.8rem; font-weight: 500;">
+                                        @order.ShippingAddress
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="order-actions">
+                                <a asp-action="Detail" asp-route-id="@order.OrderId" class="btn-action btn-view">
+                                    Xem chi tiết <i class="fa-solid fa-arrow-right"></i>
+                                </a>
+
+                                @if (order.Status == "Pending")
+                                {
+                                    <form asp-action="Cancel" asp-route-id="@order.OrderId" method="post"
+                                          onsubmit="return confirm('Bạn chắc chắn muốn hủy đơn này?')">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn-action btn-cancel">
+                                            Hủy đơn hàng <i class="fa-solid fa-xmark"></i>
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state reveal">
+                <div class="empty-icon">
+                    <i class="fa-solid fa-box-open"></i>
+                </div>
+                <h2 style="font-size: 3rem; font-weight: 700; margin-bottom: 10px;">Bạn chưa có đơn hàng nào</h2>
+                <p style="font-size: 1.8rem; color: #86868b;">Hãy khám phá các sản phẩm công nghệ tuyệt vời ngay hôm nay!</p>
+                <a asp-controller="Product" asp-action="Index" class="btn-shop-now">
+                    Mua sắm ngay <i class="fa-solid fa-bag-shopping ms-2"></i>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    // Scroll Reveal Animation
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>

@@ -1,0 +1,222 @@
+@model RegisterViewModel
+@using ShopMVC.ViewModels
+@{
+    ViewData["Title"] = "Đăng ký tài khoản";
+}
+
+<style>
+    /* Import Font */
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap');
+
+    /* Scoped CSS */
+    .register-wrapper {
+        font-family: 'Be Vietnam Pro', sans-serif !important;
+        color: black;
+        background: gray;
+        min-height: 100vh;
+        display: flex; align-items: center; justify-content: center;
+        padding: 60px 20px;
+        font-size: 1.6rem;
+    }
+
+    .register-wrapper :root {
+        --primary: #0071e3;
+        --bg-input: #f5f5f7;
+        --border-input: #d2d2d7; /* Màu viền input rõ hơn */
+        --text-sub: black;
+        --radius-card: 32px;
+    }
+
+    .register-card {
+        background: #fff;
+        border-radius: var(--radius-card);
+        padding: 50px;
+        width: 100%;
+        max-width: 850px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        
+    }
+
+    /* Header */
+    .reg-header { text-align: center; margin-bottom: 40px; }
+    .reg-icon {
+        font-size: 3.5rem; color: #0071e3; margin-bottom: 15px;
+        display: inline-block;
+        animation: float 3s ease-in-out infinite;
+    }
+    .reg-title { font-family:Be Vietnam Pro ;font-size: 3.2rem; font-weight: 800; margin-bottom: 10px; color: #1d1d1f; }
+    .reg-subtitle { font-size: 1.6rem; color: white; }
+
+    /* Form Elements */
+    .form-group { margin-bottom: 20px; }
+    .form-label {
+        font-size: 1.4rem; font-weight: 600; margin-bottom: 8px; display: block; color: black;
+    }
+    
+    .input-wrapper { position: relative; }
+    
+    /* Tìm đến đoạn này trong mã của bạn */
+.form-input {
+    /* ... các thuộc tính khác ... */
+    color: black !important; /* Đảm bảo màu chữ là đen */
+}
+
+.form-input:focus {
+    background: white; [cite: 20]
+    border-color: #0071e3; [cite: 20]
+    color: black; /* Thêm dòng này để chữ luôn đen khi focus */
+    box-shadow: 0 0 0 4px rgba(128, 128, 128, 0.2); /* Đổi gray thành rgba để mượt hơn */
+    outline: none;
+}
+    
+    /* Style riêng cho Textarea Địa chỉ */
+    textarea.form-input { 
+        padding-left: 20px; /* Textarea không có icon đè lên nên padding ít hơn */
+        height: auto; 
+        min-height: 100px;
+    } 
+
+    .input-icon {
+        position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
+        font-size: 1.6rem; color: black;
+        z-index: 2; /* Đảm bảo icon nổi lên trên */
+    }
+
+    /* Button */
+    .btn-register {
+        width: 100%; padding: 18px; border-radius: 99px;
+        background: #0071e3; color: #fff;
+        font-size: 1.8rem; font-weight: 700; border: none;
+        cursor: pointer; transition: 0.3s; margin-top: 20px;
+        display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .btn-register:hover {
+        background: #005bb5; transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 113, 227, 0.3);
+    }
+
+    .login-redirect { text-align: center; margin-top: 30px; font-size: 1.5rem; color: black; }
+    .login-redirect a { color: #0071e3; font-weight: 700; text-decoration: none; }
+    .login-redirect a:hover { text-decoration: underline; }
+
+    /* Animation */
+    @@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s ease-out; }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+</style>
+
+<div class="register-wrapper">
+    <div class="register-card reveal">
+        <div class="reg-header">
+            <div class="reg-icon"><i class="fa-solid fa-user-plus"></i></div>
+            <h1 class="reg-title">Tạo tài khoản mới</h1>
+            <p class="reg-subtitle">Tham gia cùng chúng tôi để nhận nhiều ưu đãi hấp dẫn</p>
+        </div>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger p-3 rounded-3 mb-4" style="font-size: 1.4rem;">
+                <i class="fa-solid fa-circle-exclamation me-2"></i> @TempData["Error"]
+            </div>
+        }
+
+        <form asp-controller="Account" asp-action="Register" method="post" autocomplete="off">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3" style="font-size: 1.4rem"></div>
+
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Username" class="form-label" >Tên đăng nhập <span class="text-danger">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-user input-icon"></i>
+                            <input asp-for="Username" style="padding-left: 40px" class="form-input" placeholder="VD: user123" autocomplete="off" />
+                        </div>
+                        <span asp-validation-for="Username" class="text-danger mt-1 d-block small"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="FullName" class="form-label">Họ và tên <span class="text-danger">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-id-card input-icon"></i>
+                            <input asp-for="FullName" class="form-input" style="padding-left: 40px" placeholder="VD: Nguyễn Văn A" />
+                        </div>
+                        <span asp-validation-for="FullName" class="text-danger mt-1 d-block small"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Email" class="form-label">Email <span class="text-danger">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-envelope input-icon"></i>
+                            <input asp-for="Email" class="form-input" style="padding-left: 40px" placeholder="email@example.com" autocomplete="off" />
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger mt-1 d-block small"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Phone" class="form-label">Số điện thoại</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-phone input-icon"></i>
+                            <input asp-for="Phone" class="form-input" style="padding-left: 40px" placeholder="09xxxxxxxx" />
+                        </div>
+                        <span asp-validation-for="Phone" class="text-danger mt-1 d-block small"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Address" class="form-label">Địa chỉ</label>
+                <textarea asp-for="Address" class="form-input"  rows="2" placeholder="Số nhà, tên đường, phường/xã..."></textarea>
+                <span asp-validation-for="Address" class="text-danger mt-1 d-block small"></span>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Password" class="form-label">Mật khẩu <span class="text-danger">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-lock input-icon"></i>
+                            <input asp-for="Password" type="password" style="padding-left: 40px" class="form-input" placeholder="Tối thiểu 6 ký tự" autocomplete="new-password" />
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger mt-1 d-block small"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword" class="form-label">Xác nhận mật khẩu <span class="text-danger">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-shield-halved input-icon"></i>
+                            <input asp-for="ConfirmPassword" type="password" style="padding-left: 40px" class="form-input" placeholder="Nhập lại mật khẩu" />
+                        </div>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger mt-1 d-block small"></span>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-register">
+                Đăng ký ngay <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+            <div class="login-redirect">
+                Đã có tài khoản? <a asp-controller="Account" asp-action="Login">Đăng nhập tại đây</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Animation Reveal
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.querySelector('.reveal').classList.add('active');
+            }, 100);
+        });
+    </script>
+}

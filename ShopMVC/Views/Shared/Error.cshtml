@@ -1,0 +1,35 @@
+@model ErrorViewModel
+
+@{
+    ViewData["Title"] = "Error";
+}
+
+<section class="error-area pt-100 pb-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 text-center">
+                <div class="error-content">
+                    <h1 class="error-title">Oops!</h1>
+                    <h2>Đã có lỗi xảy ra</h2>
+                    
+                    @if (Model?.ShowRequestId ?? false)
+                    {
+                        <p class="text-muted">
+                            <strong>Request ID:</strong> <code>@Model.RequestId</code>
+                        </p>
+                    }
+                    
+                    <p class="mt-4">
+                        Xin lỗi vì sự bất tiện này. Vui lòng thử lại sau hoặc quay về trang chủ.
+                    </p>
+                    
+                    <div class="error-btn mt-4">
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+                            <i class="fa fa-home"></i> Về trang chủ
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

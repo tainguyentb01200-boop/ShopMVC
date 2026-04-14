@@ -1,0 +1,356 @@
+@{
+    ViewData["Title"] = "Liên hệ - PhoneShop";
+    Layout = "_Layout";
+}
+
+<style>
+    /* Import Font */
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap');
+
+    /* Scoped CSS - Chỉ ảnh hưởng trong vùng .contact-wrapper */
+    .contact-wrapper {
+        /* 1. ÉP DÙNG FONT BE VIETNAM PRO */
+        font-family: 'Be Vietnam Pro', sans-serif !important;
+        color: #1d1d1f;
+        background: #fff;
+        /* 2. BASE FONT SIZE LỚN */
+        font-size: 20px;
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+
+    /* Variables */
+    .contact-wrapper {
+        --primary: #0071e3;
+        --primary-dark: #005bb5;
+        --bg-input: #f5f5f7;
+        --text-sub: #86868b;
+    }
+
+    /* --- HERO SECTION --- */
+    .contact-hero {
+        background: #000;
+        padding: 100px 20px;
+        text-align: center;
+        color: #fff;
+    }
+
+    .contact-title {
+        /* 3. TIÊU ĐỀ HERO RẤT TO (60px - 90px) */
+        font-family: Be Vietnam Pro;
+        font-size: clamp(3.5rem, 6vw, 6rem);
+        font-weight: 800;
+        color: #ffffff;
+        margin-bottom: 20px;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+    }
+
+    .contact-desc {
+        font-family: Be Vietnam Pro;
+        font-size: 1.6rem;
+        color: #a1a1a6;
+        max-width: 800px;
+        margin: 0 auto;
+        font-weight: 400;
+    }
+
+    /* --- MAIN CONTENT --- */
+    .contact-section {
+        padding: 80px 0;
+    }
+
+    /* Left Column: Info */
+    .info-group {
+        padding-right: 40px;
+    }
+
+    .info-item {
+        display: flex;
+        gap: 24px;
+        margin-bottom: 40px;
+        align-items: flex-start;
+    }
+
+    .info-icon {
+        font-family: Be Vietnam Pro;
+        width: 64px;
+        height: 64px;
+        background: var(--bg-input);
+        color: var(--primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        flex-shrink: 0;
+    }
+
+    .info-text h5 {
+        font-family: Be Vietnam Pro;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #1d1d1f;
+    }
+
+    .info-text p {
+        font-family: Be Vietnam Pro;
+        font-size: 1.3rem;
+        color: #424245;
+        margin: 0;
+    }
+
+    .info-text a {
+        color: #1d1d1f;
+        text-decoration: none;
+        transition: 0.2s;
+    }
+
+        .info-text a:hover {
+            color: var(--primary);
+        }
+
+    /* Social Icons */
+    .social-label {
+        font-family: Be Vietnam Pro;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        display: block;
+    }
+
+    .social-list {
+        display: flex;
+        gap: 16px;
+    }
+
+    .social-btn {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        border: 1px solid #d2d2d7;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        color: #1d1d1f;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+        .social-btn:hover {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+            transform: translateY(-3px);
+        }
+
+    /* Right Column: Form */
+    .contact-form-card {
+        font-family: Be Vietnam Pro;
+        padding: 50px;
+        border-radius: 32px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .form-title {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-bottom: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 24px;
+    }
+
+    .form-label {
+        font-family: Be Vietnam Pro;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        display: block;
+        color: #1d1d1f;
+    }
+
+    .custom-input {
+        font-family: Be Vietnam Pro;
+        width: 100%;
+        padding: 18px 24px; /* Input to hơn */
+        font-size: 1.2rem;
+        background: var(--bg-input);
+        border: 1px solid transparent;
+        border-radius: 16px;
+        font-family: 'Be Vietnam Pro', sans-serif;
+        transition: 0.3s;
+        color: #1d1d1f;
+    }
+
+        .custom-input:focus {
+            background: #fff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+            outline: none;
+        }
+
+    .btn-submit {
+        font-family: Be Vietnam Pro;
+        background: var(--primary);
+        color: #fff;
+        font-size: 1.4rem;
+        font-weight: 700;
+        padding: 20px 40px;
+        border-radius: 99px;
+        border: none;
+        width: 100%;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        .btn-submit:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 10px 30px rgba(0, 113, 227, 0.3);
+            transform: translateY(-2px);
+        }
+
+    /* Map */
+    .map-container {
+        margin-top: 60px;
+        border-radius: 32px;
+        overflow: hidden;
+        height: 500px;
+        filter: grayscale(100%);
+        transition: 0.5s;
+    }
+
+        .map-container:hover {
+            filter: grayscale(0%);
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+    /* Animation */
+    .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: 0.8s;
+    }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+</style>
+
+<div class="contact-wrapper">
+    <section class="contact-hero">
+        <div class="container reveal">
+            <h1 class="contact-title">Liên hệ PhoneShop</h1>
+            <p class="contact-desc">
+                Chúng tôi luôn sẵn sàng lắng nghe bạn. Hãy để lại tin nhắn hoặc ghé thăm cửa hàng để trải nghiệm dịch vụ tốt nhất.
+            </p>
+        </div>
+    </section>
+
+    <section class="contact-section">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-5 reveal">
+                    <div class="info-group">
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fa-solid fa-location-dot"></i></div>
+                            <div class="info-text">
+                                <h5>Địa chỉ</h5>
+                                <p>123 Đường ABC, Quận 1, TP.HCM</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fa-solid fa-phone"></i></div>
+                            <div class="info-text">
+                                <h5>Hotline</h5>
+                                <p><a href="tel:0901234567">090 123 4567</a> (8:00 - 22:00)</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fa-solid fa-envelope"></i></div>
+                            <div class="info-text">
+                                <h5>Email hỗ trợ</h5>
+                                <p><a href="mailto:support@phoneshop.vn">support@phoneshop.vn</a></p>
+                            </div>
+                        </div>
+
+                        <div class="mt-5">
+                            <span class="social-label">Theo dõi chúng tôi</span>
+                            <div class="social-list">
+                                <a href="#" class="social-btn"><i class="fa-brands fa-facebook-f"></i></a>
+                                <a href="#" class="social-btn"><i class="fa-brands fa-instagram"></i></a>
+                                <a href="#" class="social-btn"><i class="fa-brands fa-tiktok"></i></a>
+                                <a href="#" class="social-btn"><i class="fa-brands fa-youtube"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-7 reveal" style="transition-delay: 0.2s; font-family: Be Vietnam Pro;">
+                    <div class="contact-form-card">
+                        <h3 class="form-title" style="transition-delay: 0.2s; font-family: Be Vietnam Pro;">Gửi tin nhắn</h3>
+                        <form>
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <label class="form-label">Họ và tên</label>
+                                    <input type="text" class="custom-input" placeholder="Tên của bạn">
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label class="form-label">Số điện thoại</label>
+                                    <input type="tel" class="custom-input" placeholder="09xxx">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="custom-input" placeholder="email@example.com">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Nội dung cần hỗ trợ</label>
+                                <textarea class="custom-input" rows="5" placeholder="Nhập câu hỏi của bạn..."></textarea>
+                            </div>
+
+                            <button type="submit" class="btn-submit">
+                                Gửi tin nhắn <i class="fa-solid fa-paper-plane ms-2"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row reveal" style="transition-delay: 0.3s">
+                <div class="col-12">
+                    <div class="map-container">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.424229624564!2d106.69837851411648!3d10.778783462100863!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f385570472f%3A0x1787491df0ed8d6a!2sIndependence%20Palace!5e0!3m2!1sen!2s!4v1646816487563!5m2!1sen!2s" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    // Scroll Reveal Animation
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>

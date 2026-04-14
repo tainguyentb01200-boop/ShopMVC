@@ -1,0 +1,74 @@
+﻿@model List<ShopMVC.ViewModels.CategoryStats>
+@{
+    ViewData["Title"] = "Thống kê danh mục";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 text-gray-800">
+            <i class="fas fa-chart-pie"></i> Thống kê theo danh mục
+        </h1>
+        <a asp-action="Products" class="btn btn-primary">
+            <i class="fas fa-box"></i> Quản lý sản phẩm
+        </a>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Danh mục</th>
+                                <th>Số sản phẩm</th>
+                                <th>Doanh thu</th>
+                                <th>Tỷ trọng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var totalRevenue = Model.Sum(c => c.TotalRevenue);
+                            }
+                            @foreach (var category in Model)
+                            {
+                                var percentage = totalRevenue > 0 ? Math.Round((double)category.TotalRevenue * 100.0 / (double)totalRevenue, 1) : 0;
+                                <tr>
+                                    <td><strong>@category.CategoryName</strong></td>
+                                    <td>@category.ProductCount sản phẩm</td>
+                                    <td><strong class="text-success">@category.TotalRevenue.ToString("N0") đ</strong></td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="progress flex-grow-1 mr-2" style="height: 20px;">
+                                                <div class="progress-bar bg-primary" style="width: @(percentage)%">
+                                                    @percentage%
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-info">
+                                <td><strong>TỔNG CỘNG</strong></td>
+                                <td><strong>@Model.Sum(c => c.ProductCount) sản phẩm</strong></td>
+                                <td><strong class="text-success">@totalRevenue.ToString("N0") đ</strong></td>
+                                <td><strong>100%</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5 text-muted">
+                    <i class="fas fa-chart-pie fa-3x mb-3"></i>
+                    <p>Chưa có dữ liệu</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,421 @@
+﻿@model ShopMVC.ViewModels.SalesReport
+@{
+    ViewData["Title"] = "Báo cáo doanh thu";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">
+        <i class="fas fa-chart-line"></i> Báo cáo doanh thu
+    </h1>
+
+    <!-- Date Filter -->
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form method="get" class="row align-items-end">
+                <div class="col-md-4">
+                    <label class="font-weight-bold">Từ ngày:</label>
+                    <input type="date" name="fromDate" class="form-control" value="@ViewBag.FromDate" />
+                </div>
+                <div class="col-md-4">
+                    <label class="font-weight-bold">Đến ngày:</label>
+                    <input type="date" name="toDate" class="form-control" value="@ViewBag.ToDate" />
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-search"></i> Xem báo cáo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Tổng đơn hàng
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalOrders</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Tổng doanh thu
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalRevenue.ToString("N0") đ</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Đơn hoàn thành
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.CompletedOrders</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Đơn chờ duyệt
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.PendingOrders</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clock fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Sales Chart with Chart.js -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">Biểu đồ doanh thu theo ngày</h6>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-sm btn-outline-primary active" onclick="showChart('daily')">Theo ngày</button>
+                <button type="button" class="btn btn-sm btn-outline-primary" onclick="showChart('monthly')">Theo tháng</button>
+            </div>
+        </div>
+        <div class="card-body">
+            @if (Model.DailySales.Any())
+            {
+                <!-- Chart Canvas -->
+                <div class="mb-4">
+                    <canvas id="revenueChart" style="height: 300px;"></canvas>
+                </div>
+
+                <!-- Data Table -->
+                <div class="table-responsive">
+                    <table class="table table-hover" id="dailySalesTable">
+                        <thead>
+                            <tr>
+                                <th>Ngày</th>
+                                <th>Số đơn</th>
+                                <th>Doanh thu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var daily in Model.DailySales.OrderByDescending(d => d.Date))
+                            {
+                                <tr>
+                                    <td><strong>@daily.Date.ToString("dd/MM/yyyy")</strong></td>
+                                    <td>@daily.OrderCount đơn</td>
+                                    <td><strong class="text-success">@daily.Revenue.ToString("N0") đ</strong></td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-info">
+                                <td><strong>TỔNG CỘNG</strong></td>
+                                <td><strong>@Model.DailySales.Sum(d => d.OrderCount) đơn</strong></td>
+                                <td><strong class="text-success">@Model.DailySales.Sum(d => d.Revenue).ToString("N0") đ</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5 text-muted">
+                    <i class="fas fa-chart-line fa-3x mb-3"></i>
+                    <p>Không có dữ liệu trong khoảng thời gian này</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Order Status Breakdown -->
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Phân loại theo trạng thái</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Hoàn thành</span>
+                            <strong class="text-success">@Model.CompletedOrders đơn</strong>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" style="width: @(Model.TotalOrders > 0 ? (Model.CompletedOrders * 100.0 / Model.TotalOrders) : 0)%"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Chờ duyệt</span>
+                            <strong class="text-warning">@Model.PendingOrders đơn</strong>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning" style="width: @(Model.TotalOrders > 0 ? (Model.PendingOrders * 100.0 / Model.TotalOrders) : 0)%"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Đã hủy</span>
+                            <strong class="text-secondary">@Model.CancelledOrders đơn</strong>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-secondary" style="width: @(Model.TotalOrders > 0 ? (Model.CancelledOrders * 100.0 / Model.TotalOrders) : 0)%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Thống kê tổng quan</h6>
+                </div>
+                <div class="card-body">
+                    <p>
+                        <strong>Khoảng thời gian:</strong><br>
+                        @Model.FromDate.ToString("dd/MM/yyyy") - @Model.ToDate.ToString("dd/MM/yyyy")
+                    </p>
+                    <p><strong>Số ngày:</strong> @((Model.ToDate - Model.FromDate).Days + 1) ngày</p>
+                    <p>
+                        <strong>Doanh thu trung bình/ngày:</strong><br>
+                        <span class="text-success h5">
+                            @(Model.DailySales.Any() ? (Model.TotalRevenue / Model.DailySales.Count).ToString("N0") : "0") đ
+                        </span>
+                    </p>
+                    <p>
+                        <strong>Số đơn trung bình/ngày:</strong><br>
+                        <span class="h5">@(Model.DailySales.Any() ? Math.Round((double)Model.TotalOrders / Model.DailySales.Count, 1) : 0) đơn</span>
+                    </p>
+                    <p>
+                        <strong>Giá trị đơn hàng trung bình:</strong><br>
+                        <span class="text-info h5">
+                            @(Model.TotalOrders > 0 ? (Model.TotalRevenue / Model.TotalOrders).ToString("N0") : "0") đ
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        // Prepare data
+        const dailyData = @Html.Raw(Json.Serialize(Model.DailySales.OrderBy(d => d.Date).Select(d => new {
+            date = d.Date.ToString("dd/MM/yyyy"),
+                orderCount = d.OrderCount,
+                revenue = (double)d.Revenue
+        })));
+
+    console.log('Daily Data:', dailyData); // Debug
+
+    // Group by month for monthly view
+    const monthlyData = {};
+    dailyData.forEach(item => {
+        const month = item.date.substring(3); // Get MM/yyyy
+        if (!monthlyData[month]) {
+            monthlyData[month] = { orderCount: 0, revenue: 0 };
+        }
+        monthlyData[month].orderCount += item.orderCount;
+        monthlyData[month].revenue += item.revenue;
+    });
+
+    let currentChart = null;
+
+    function showChart(type) {
+        // Update button states
+        document.querySelectorAll('.btn-group button').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+
+        if (currentChart) {
+            currentChart.destroy();
+        }
+
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+
+        let labels, revenueData, orderData;
+
+        if (type === 'daily') {
+            labels = dailyData.map(d => d.date);
+            revenueData = dailyData.map(d => d.revenue);
+            orderData = dailyData.map(d => d.orderCount);
+        } else {
+            labels = Object.keys(monthlyData);
+            revenueData = Object.values(monthlyData).map(m => m.revenue);
+            orderData = Object.values(monthlyData).map(m => m.orderCount);
+        }
+
+        console.log('Labels:', labels);
+        console.log('Revenue Data:', revenueData);
+        console.log('Order Data:', orderData);
+
+        currentChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Doanh thu (đ)',
+                        data: revenueData,
+                        backgroundColor: 'rgba(28, 200, 138, 0.8)',
+                        borderColor: 'rgba(28, 200, 138, 1)',
+                        borderWidth: 2,
+                        yAxisID: 'y',
+                        barThickness: 50 // Fixed bar width
+                    },
+                    {
+                        label: 'Số đơn hàng',
+                        data: orderData,
+                        type: 'line',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        yAxisID: 'y1',
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            font: {
+                                size: 14
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.datasetIndex === 0) {
+                                    label += new Intl.NumberFormat('vi-VN').format(context.parsed.y) + ' đ';
+                                } else {
+                                    label += context.parsed.y + ' đơn';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Doanh thu (đ)',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return new Intl.NumberFormat('vi-VN', {
+                                        notation: 'compact',
+                                        compactDisplay: 'short'
+                                    }).format(value);
+                                }
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Số đơn hàng',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                drawOnChartArea: false
+                            },
+                            ticks: {
+                                stepSize: 1,
+                                precision: 0,
+                                callback: function(value) {
+                                    if (Number.isInteger(value)) {
+                                        return value;
+                                    }
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+            }
+        });
+    }
+
+    // Initialize with daily view
+    @if (Model.DailySales.Any())
+    {
+            <text>
+            document.addEventListener('DOMContentLoaded', function() {
+                showChart('daily');
+            });
+            </text>
+    }
+</script>
+}

@@ -1,0 +1,14 @@
+﻿/*
+* FIX: Sửa lỗi template Addina làm ẩn số lượng trong input[type=number]
+*/
+
+.quantity-input[type=number] {
+    -moz-appearance: textfield; /* Tắt spinner cho Firefox */
+    text-align: center !important; /* Luôn luôn căn giữa text */
+}
+
+.quantity-input[type=number]::-webkit-inner-spin-button,
+.quantity-input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none; /* Tắt spinner cho Chrome, Safari, Edge */
+    margin: 0;
+}

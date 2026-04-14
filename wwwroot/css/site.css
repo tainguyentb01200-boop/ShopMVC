@@ -1,0 +1,136 @@
+/* Global auth styles used by Login and Register pages */
+.auth-page-wrapper,
+.login-page-wrapper,
+.register-page-wrapper {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  color: #000;
+  background: #f5f5f7;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+}
+
+/* Card */
+.auth-card,
+.login-card,
+.register-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 60px 50px;
+  width: 100%;
+  max-width: 550px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+  text-align: center;
+  margin: 20px;
+}
+
+/* Inputs: typed text, caret, placeholders */
+.auth-page-wrapper input,
+.auth-page-wrapper textarea,
+.auth-page-wrapper select,
+.auth-page-wrapper .form-input,
+.auth-page-wrapper .form-control {
+  color: #000 !important;
+  caret-color: #000 !important;
+  background: var(--bg-input, #f5f5f7);
+  border: 1px solid transparent;
+  border-radius: 16px;
+  font-size: 1.8rem;
+  outline: none;
+}
+
+/* Focus state */
+.auth-page-wrapper input:focus,
+.auth-page-wrapper textarea:focus,
+.auth-page-wrapper select:focus,
+.auth-page-wrapper .form-input:focus,
+.auth-page-wrapper .form-control:focus {
+  color: black !important;
+  background: #fff !important;
+  border-color: #0071e3 !important;
+  box-shadow: 0 0 0 4px rgba(0,113,227,0.1) !important;
+}
+
+/* Placeholders */
+.auth-page-wrapper input::placeholder,
+.auth-page-wrapper textarea::placeholder,
+.auth-page-wrapper .form-input::placeholder,
+.auth-page-wrapper .form-control::placeholder {
+  color: black !important;
+  opacity: 1 !important;
+}
+.auth-page-wrapper input:-ms-input-placeholder,
+.auth-page-wrapper textarea:-ms-input-placeholder { color: black !important; }
+.auth-page-wrapper input::-ms-input-placeholder,
+.auth-page-wrapper textarea::-ms-input-placeholder { color: black !important; }
+
+/* Autofill (Chrome) */
+.auth-page-wrapper input:-webkit-autofill,
+.auth-page-wrapper input:-webkit-autofill:focus,
+.auth-page-wrapper input:-webkit-autofill:hover {
+  -webkit-text-fill-color: #000 !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
+/* Icons inside inputs */
+.auth-page-wrapper .input-icon {
+  color: #86868b;
+}
+
+/* Buttons / links (optional) */
+.auth-page-wrapper .btn-login { background: #0071e3; color: #fff; }
+.auth-page-wrapper .login-link { color: #0071e3; font-weight: 700; }
+
+/* Small helpers if inputs have inline styles: force override */
+.auth-page-wrapper input[style],
+.auth-page-wrapper .form-input[style] {
+  color: #000 !important;
+}
+
+/* Make typed text black across forms (login/register) */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="search"],
+textarea,
+select,
+input.form-input,
+.form-input,
+.form-control {
+  color: #000 !important;
+  caret-color: #000 !important;
+}
+
+/* Keep text black on focus */
+input:focus,
+textarea:focus,
+select:focus,
+input.form-input:focus,
+.form-input:focus,
+.form-control:focus {
+  color: #000 !important;
+  outline: none;
+}
+
+/* Placeholder text black (cross-browser) */
+input::placeholder,
+textarea::placeholder,
+input.form-input::placeholder,
+.form-input::placeholder {
+  color: #000 !important;
+  opacity: 1 !important;
+}
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder { color: #000 !important; } /* IE10+ */
+input::-ms-input-placeholder,
+textarea::-ms-input-placeholder { color: #000 !important; } /* Edge */
+
+/* Autofill (Chrome) */
+input:-webkit-autofill,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:hover {
+  -webkit-text-fill-color: #000 !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}

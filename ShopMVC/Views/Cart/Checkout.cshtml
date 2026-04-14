@@ -1,0 +1,517 @@
+@model ShopMVC.ViewModels.CheckoutViewModel
+@{
+    ViewData["Title"] = "Thanh toán - PhoneShop Tech";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* 1. IMPORT & VARIABLES */
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap');
+
+    :root {
+        --light-bg: #ffffff;
+        --light-surface: #f8f9fa;
+        --light-border: #e2e8f0;
+        --tech-blue: #0066ff;
+        --tech-cyan: #00bcd4;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --font-main: 'Be Vietnam Pro', sans-serif;
+        --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        --shadow-focus: 0 0 0 4px rgba(0, 102, 255, 0.1);
+    }
+
+    /* 2. LAYOUT */
+    .checkout-wrapper {
+        font-family: var(--font-main) !important;
+        background-color: var(--light-bg);
+        color: var(--text-primary);
+        min-height: 100vh;
+        font-size: 1.5rem;
+        padding-bottom: 80px;
+        /* Tech Grid Pattern */
+        background-image: radial-gradient(var(--light-border) 1px, transparent 1px);
+        background-size: 30px 30px;
+    }
+
+    /* Header */
+    .checkout-header {
+        padding: 50px 0 30px;
+        text-align: center;
+        background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(248,249,250,0.8) 100%);
+        border-bottom: 1px dashed var(--light-border);
+        margin-bottom: 40px;
+    }
+
+    .page-title {
+        font-family: Be Vietnam Pro;
+        font-size: 3.5rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: var(--text-primary);
+        letter-spacing: -1px;
+        margin-bottom: 5px;
+    }
+
+    .page-subtitle {
+        color: var(--text-secondary);
+        font-size: 1.6rem;
+    }
+
+    /* 3. CARDS (TECH STYLE) */
+    .tech-card {
+        background: #fff;
+        border: 1px solid var(--light-border);
+        border-radius: 12px;
+        box-shadow: var(--shadow-card);
+        margin-bottom: 24px;
+        overflow: hidden;
+    }
+
+    .tech-card-header {
+        background: var(--light-surface);
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--light-border);
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.4rem;
+    }
+
+        .tech-card-header i {
+            color: var(--tech-blue);
+            font-size: 1.6rem;
+        }
+
+    .tech-card-body {
+        padding: 25px;
+    }
+
+    /* 4. FORM INPUTS */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        font-size: 1.4rem;
+        margin-bottom: 8px;
+        display: block;
+        color: var(--text-primary);
+    }
+
+    .form-control-custom {
+        width: 100%;
+        padding: 12px 15px;
+        border-radius: 8px;
+        border: 1px solid var(--light-border);
+        font-family: var(--font-main);
+        font-size: 1.5rem;
+        transition: 0.3s;
+        color: var(--text-primary);
+        background: #fff;
+    }
+
+        .form-control-custom:focus {
+            border-color: var(--tech-blue);
+            box-shadow: var(--shadow-focus);
+            outline: none;
+        }
+
+        .form-control-custom[readonly] {
+            background-color: #f1f5f9;
+            color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+    /* 5. PAYMENT METHOD (CUSTOM RADIO) */
+    .payment-option {
+        position: relative;
+        margin-bottom: 15px;
+    }
+
+        .payment-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .payment-label {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border: 1px solid var(--light-border);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+        background: #fff;
+    }
+
+    .payment-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--light-surface);
+        border-radius: 8px;
+        margin-right: 15px;
+        color: var(--text-secondary);
+        font-size: 1.8rem;
+    }
+
+    /* Active State for Radio */
+    .payment-option input[type="radio"]:checked + .payment-label {
+        border-color: var(--tech-blue);
+        background: rgba(0, 102, 255, 0.03);
+        box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.1);
+    }
+
+        .payment-option input[type="radio"]:checked + .payment-label .payment-icon {
+            background: var(--tech-blue);
+            color: #fff;
+        }
+
+    .payment-title {
+        font-weight: 700;
+        display: block;
+        font-size: 1.5rem;
+    }
+
+    .payment-desc {
+        font-size: 1.3rem;
+        color: var(--text-secondary);
+    }
+
+    /* 6. ORDER SUMMARY ITEMS */
+    .summary-item {
+        display: flex;
+        align-items: center;
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+        border-bottom: 1px dashed var(--light-border);
+    }
+
+        .summary-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+    .sum-img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid var(--light-border);
+        margin-right: 15px;
+    }
+
+    .sum-info {
+        flex: 1;
+    }
+
+    .sum-name {
+        font-weight: 600;
+        font-size: 1.5rem;
+        line-height: 1.3;
+        margin-bottom: 4px;
+    }
+
+    .sum-meta {
+        font-size: 1.3rem;
+        color: var(--text-secondary);
+    }
+
+    .sum-price {
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    /* Totals */
+    .total-box {
+        background: var(--light-surface);
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 1.5rem;
+        color: var(--text-secondary);
+    }
+
+        .total-row.final {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1.8rem;
+        }
+
+            .total-row.final span:last-child {
+                color: var(--tech-blue);
+                font-size: 2.2rem;
+                font-weight: 800;
+            }
+
+    /* 7. BUTTONS */
+    .btn-place-order {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        background: var(--tech-blue);
+        color: #fff;
+        border: none;
+        padding: 16px;
+        font-family: var(--font-main);
+        font-size: 1.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-top: 25px;
+        transition: 0.3s;
+        /* Vát góc đặc trưng */
+        clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+    }
+
+        .btn-place-order:hover {
+            background: #0052cc;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 102, 255, 0.3);
+        }
+
+    .btn-back {
+        display: block;
+        text-align: center;
+        margin-top: 15px;
+        color: var(--text-secondary);
+        font-weight: 600;
+        text-decoration: none;
+        transition: 0.2s;
+    }
+
+        .btn-back:hover {
+            color: var(--tech-blue);
+            text-decoration: underline;
+        }
+
+    /* Animation */
+    .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: 0.6s ease-out;
+    }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+</style>
+
+<div class="checkout-wrapper">
+    <div class="checkout-header">
+        <div class="container">
+            <h1 class="page-title">Xác nhận thanh toán</h1>
+            <p class="page-subtitle">Hoàn tất đơn hàng của bạn</p>
+        </div>
+    </div>
+
+    <div class="container">
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger d-flex align-items-center mb-4" role="alert" style="border-radius: 8px;">
+                <i class="fas fa-exclamation-triangle me-3" style="font-size: 2rem;"></i>
+                <div>
+                    <strong>Có lỗi xảy ra:</strong> @TempData["Error"]
+                </div>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        <form asp-action="ProcessCheckout" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="row g-5">
+                <div class="col-lg-7 reveal">
+
+                    <div class="tech-card">
+                        <div class="tech-card-header">
+                            <i class="fa-solid fa-truck-fast"></i> Thông tin giao hàng
+                        </div>
+                        <div class="tech-card-body">
+                            <div class="form-group">
+                                <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
+                                <input asp-for="FullName" class="form-control-custom" placeholder="Nhập họ tên" required readonly>
+                                <div class="mt-1" style="font-size: 1.2rem; color: var(--text-secondary);">
+                                    <i class="fa-solid fa-lock"></i> Lấy từ tài khoản của bạn
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Email <span class="text-danger">*</span></label>
+                                        <input asp-for="Email" type="email" class="form-control-custom" required readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
+                                        <input asp-for="Phone" type="tel" class="form-control-custom" required readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="ShippingAddress" class="form-label">Địa chỉ nhận hàng <span class="text-danger">*</span></label>
+                                <textarea asp-for="ShippingAddress" class="form-control-custom" rows="3"
+                                          placeholder="Số nhà, tên đường, phường/xã, quận/huyện..."></textarea>
+                                <span asp-validation-for="ShippingAddress" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-group mb-0">
+                                <label asp-for="Notes" class="form-label">Ghi chú đơn hàng (Tùy chọn)</label>
+                                <textarea asp-for="Notes" class="form-control-custom" rows="2"
+                                          placeholder="Ví dụ: Giao hàng giờ hành chính, gọi trước khi giao..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tech-card">
+                        <div class="tech-card-header">
+                            <i class="fa-regular fa-credit-card"></i> Phương thức thanh toán
+                        </div>
+                        <div class="tech-card-body">
+
+                            <div class="payment-option">
+                                <input type="radio" id="cod" asp-for="PaymentMethod" value="COD" checked>
+                                <label class="payment-label" for="cod">
+                                    <div class="payment-icon"><i class="fa-solid fa-money-bill-wave"></i></div>
+                                    <div>
+                                        <span class="payment-title">Thanh toán khi nhận hàng (COD)</span>
+                                        <span class="payment-desc">Thanh toán tiền mặt cho shipper khi nhận được hàng.</span>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="payment-option">
+                                <input type="radio" id="banking" asp-for="PaymentMethod" value="Banking">
+                                <label class="payment-label" for="banking">
+                                    <div class="payment-icon"><i class="fa-solid fa-building-columns"></i></div>
+                                    <div>
+                                        <span class="payment-title">Chuyển khoản ngân hàng</span>
+                                        <span class="payment-desc">Quét mã QR VietQR Pro hoặc chuyển khoản thủ công.</span>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="payment-option">
+                                <input type="radio" id="momo" asp-for="PaymentMethod" value="MoMo">
+                                <label class="payment-label" for="momo">
+                                    <div class="payment-icon" style="color: #d82d8b;"><i class="fa-solid fa-wallet"></i></div>
+                                    <div>
+                                        <span class="payment-title">Ví điện tử MoMo</span>
+                                        <span class="payment-desc">Cổng thanh toán an toàn, tiện lợi.</span>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <span asp-validation-for="PaymentMethod" class="text-danger small"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5 reveal" style="transition-delay: 0.2s">
+                    <div class="tech-card" style="position: sticky; top: 100px;">
+                        <div class="tech-card-header">
+                            <i class="fa-solid fa-bag-shopping"></i> Đơn hàng của bạn
+                        </div>
+                        <div class="tech-card-body">
+                            <div style="max-height: 300px; overflow-y: auto; padding-right: 5px;">
+                                @foreach (var item in Model.CartItems)
+                                {
+                                    <div class="summary-item">
+                                        @if (!string.IsNullOrEmpty(item.Image))
+                                        {
+                                            <img src="~/images/products/@item.Image" alt="@item.ProductName" class="sum-img">
+                                        }
+                                        else
+                                        {
+                                            <div class="sum-img bg-light d-flex align-items-center justify-content-center">
+                                                <i class="fa-solid fa-image text-muted"></i>
+                                            </div>
+                                        }
+
+                                        <div class="sum-info">
+                                            <div class="sum-name">@item.ProductName</div>
+                                            <div class="d-flex justify-content-between">
+                                                <span class="sum-meta">x @item.Quantity</span>
+                                                <span class="sum-price">@item.LineTotal?.ToString("N0")₫</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="total-box">
+                                <div class="total-row">
+                                    <span>Tạm tính</span>
+                                    <span>@Model.SubTotal.ToString("N0")₫</span>
+                                </div>
+                                <div class="total-row">
+                                    <span>Vận chuyển</span>
+                                    <span class="text-success">@Model.ShippingFee.ToString("N0")₫</span>
+                                </div>
+                                <div class="total-row final">
+                                    <span>Tổng thanh toán</span>
+                                    <span>@Model.Total.ToString("N0")₫</span>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-place-order">
+                                <i class="fa-solid fa-check me-2"></i> Đặt hàng ngay
+                            </button>
+
+                            <a asp-controller="Cart" asp-action="Index" class="btn-back">
+                                <i class="fa-solid fa-angle-left"></i> Quay lại giỏ hàng
+                            </a>
+
+                            <div class="mt-4 text-center text-muted" style="font-size: 1.2rem;">
+                                <i class="fa-solid fa-shield-halved me-1"></i> Thông tin được mã hóa và bảo mật tuyệt đối.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Reveal Animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+}

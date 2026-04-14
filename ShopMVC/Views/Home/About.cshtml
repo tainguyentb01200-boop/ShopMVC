@@ -1,0 +1,291 @@
+@{
+    ViewData["Title"] = "Về chúng tôi - PhoneShop";
+    Layout = "_Layout";
+}
+
+<style>
+    /* Import Font */
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap');
+
+    /* Scoped CSS - Chỉ ảnh hưởng trong vùng .about-wrapper */
+    .about-wrapper {
+        /* 1. ÉP DÙNG FONT BE VIETNAM PRO */
+        font-family: 'Be Vietnam Pro', sans-serif !important;
+        color: #1d1d1f;
+        background: #fff;
+        overflow-x: hidden;
+        /* 2. TĂNG SIZE CHỮ CƠ BẢN LÊN 20PX */
+        font-size: 20px;
+        line-height: 1.6;
+    }
+
+    /* Các biến màu sắc */
+    .about-wrapper {
+        --primary: #0071e3;
+        --text-grey: #86868b;
+        --bg-light: #f5f5f7;
+    }
+
+    /* --- HERO SECTION --- */
+    .about-hero {
+        text-align: center;
+        padding: 100px 20px;
+        background: #000;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .about-hero-title {
+        /* 3. TIÊU ĐỀ RẤT TO */
+        font-family: 'Be Vietnam Pro';
+        font-size: clamp(3.5rem, 6vw, 6rem);
+        font-weight: 800;
+        color: #ffffff; /* Dùng màu trắng thuần để tránh lỗi hiển thị khối */
+        margin-bottom: 30px;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+    }
+
+    .about-hero-desc {
+        font-size: 1.6rem; /* Chữ mô tả to hơn */
+        color: #a1a1a6;
+        max-width: 900px;
+        margin: 0 auto;
+        font-weight: 400;
+    }
+
+    /* --- STORY SECTION --- */
+    .story-section {
+        padding: 100px 0;
+    }
+
+    .story-img-wrap {
+        border-radius: 30px;
+        overflow: hidden;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        transition: 0.5s;
+    }
+
+        .story-img-wrap img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+    .story-content h3 {
+        font-size: 3rem; /* Tiêu đề mục to hơn */
+        font-weight: 800;
+        margin-bottom: 30px;
+    }
+
+    .story-content p {
+        font-family: 'Be Vietnam Pro';
+        font-size: 1.3rem; /* Nội dung văn bản to rõ */
+        color: #424245;
+        margin-bottom: 24px;
+        text-align: justify;
+    }
+
+    /* --- VALUES GRID --- */
+    .values-section {
+        background: #f5f5f7;
+        padding: 100px 0;
+    }
+
+    .value-card {
+        background: #fff;
+        padding: 50px 30px;
+        border-radius: 30px;
+        text-align: center;
+        height: 100%;
+        transition: 0.3s;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+        .value-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+
+    .value-icon {
+        width: 80px;
+        height: 80px;
+        background: rgba(0, 113, 227, 0.1);
+        color: #0071e3;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.2rem;
+        margin: 0 auto 30px;
+    }
+
+    .value-title {
+        font-size: 2.6rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .value-desc {
+        color: #86868b;
+        font-size: 2.1rem;
+    }
+
+    /* --- STATS --- */
+    .stats-section {
+        padding: 80px 0;
+        border-top: 1px solid #eee;
+    }
+
+    .stat-item {
+        text-align: center;
+        padding: 20px;
+    }
+
+    .stat-number {
+        font-size: 4rem;
+        font-weight: 900;
+        color: #0071e3;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .stat-label {
+        font-size: 1.4rem;
+        color: #1d1d1f;
+        font-weight: 600;
+    }
+
+    /* ANIMATION */
+    .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 0.8s ease-out;
+    }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+</style>
+
+<div class="about-wrapper">
+    <section class="about-hero">
+        <div class="container reveal">
+            <h1 class="about-hero-title">Kiến tạo công nghệ.<br>Nâng tầm trải nghiệm.</h1>
+            <p class="about-hero-desc">
+                PhoneShop không chỉ bán điện thoại. Chúng tôi mang đến những giải pháp công nghệ tiên tiến nhất để cuộc sống của bạn trở nên dễ dàng hơn.
+            </p>
+        </div>
+    </section>
+
+    <section class="story-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0 reveal">
+                    <div class="story-img-wrap">
+                        <img src="~/images/products/iphone15pro.jpg" alt="PhoneShop Store" class="img-fluid">
+                    </div>
+                </div>
+                <div class="col-lg-6 ps-lg-5 reveal" style="transition-delay: 0.2s">
+                    <div class="story-content">
+                        <h3>ABOUT ME</h3>
+                        <p>
+                            Thành lập từ năm 2025, PhoneShop bắt đầu với một cửa hàng nhỏ cùng niềm đam mê mãnh liệt với các sản phẩm Apple. Đến nay, chúng tôi tự hào là điểm đến tin cậy của hàng nghìn tín đồ công nghệ.
+                        </p>
+                        <p>
+                            Tại PhoneShop, chúng tôi cam kết chỉ bán hàng <strong>Chính hãng (Authentic)</strong>. Mỗi sản phẩm bán ra đều trải qua quy trình kiểm tra nghiêm ngặt 12 bước để đảm bảo chất lượng hoàn hảo nhất khi đến tay khách hàng.
+                        </p>
+                        <div class="mt-5">
+                            <a href="#" class="btn btn-dark rounded-pill px-5 py-3 fw-bold" style="font-size: 1.2rem;">Xem hồ sơ năng lực</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="values-section">
+        <div class="container">
+            <div class="text-center mb-5 reveal">
+                <h2 style="font-family: Be Vietnam Pro ;font-weight: 800; font-size: 5rem; margin-bottom: 10px;">Tại sao chọn PhoneShop?</h2>
+                <p class="text-muted" style="font-size: 2.4rem;">Những giá trị cốt lõi tạo nên sự khác biệt.</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3 reveal">
+                    <div class="value-card">
+                        <div class="value-icon"><i class="fa-solid fa-medal"></i></div>
+                        <h4 class="value-title">Chất lượng Vàng</h4>
+                        <p class="value-desc">Cam kết 100% sản phẩm chính hãng, nguyên seal.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 reveal" style="transition-delay: 0.1s">
+                    <div class="value-card">
+                        <div class="value-icon"><i class="fa-solid fa-bolt"></i></div>
+                        <h4 class="value-title">Giao siêu tốc</h4>
+                        <p class="value-desc">Giao hàng hỏa tốc trong 2h. Miễn phí vận chuyển.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 reveal" style="transition-delay: 0.2s">
+                    <div class="value-card">
+                        <div class="value-icon"><i class="fa-solid fa-rotate"></i></div>
+                        <h4 class="value-title">30 Ngày đổi trả</h4>
+                        <p class="value-desc">Lỗi là đổi mới. Bảo hành phần cứng 12 tháng.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 reveal" style="transition-delay: 0.3s">
+                    <div class="value-card">
+                        <div class="value-icon"><i class="fa-solid fa-headset"></i></div>
+                        <h4 class="value-title">Hỗ trợ trọn đời</h4>
+                        <p class="value-desc">Kỹ thuật viên chuyên nghiệp hỗ trợ trọn đời máy.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-6 col-md-3 reveal">
+                    <div class="stat-item">
+                        <span class="stat-number">5+</span>
+                        <span class="stat-label">Năm kinh nghiệm</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 reveal" style="transition-delay: 0.1s">
+                    <div class="stat-item">
+                        <span class="stat-number">10k+</span>
+                        <span class="stat-label">Khách hàng</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 reveal" style="transition-delay: 0.2s">
+                    <div class="stat-item">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Chính hãng</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 reveal" style="transition-delay: 0.3s">
+                    <div class="stat-item">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">Hỗ trợ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
